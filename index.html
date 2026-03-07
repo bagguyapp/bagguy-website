@@ -3,395 +3,371 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bag Guy — Save More. Every Bag, Every Time.</title>
-  <meta name="description" content="Bag Guy is the shopping app that finds instant savings at checkout — powered by Web3 rewards, real-time deals, and a community that shops smarter together." />
+  <title>Bag Guy — Save More. Every Shop, Every Time.</title>
+  <meta name="description" content="Bag Guy is the free shopping app that finds instant savings at checkout. Scan, save, and earn Savings Stars redeemable for real cash back." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0d0d1a;
-      --card: #13132a;
-      --purple: #7c3aed;
-      --purple-light: #a855f7;
-      --green: #22c55e;
-      --text: #f1f1f1;
-      --muted: #8b8bab;
+      --bg: #0d0d1a; --card: #13132a; --purple: #7c3aed; --purple-light: #a855f7;
+      --green: #22c55e; --text: #f1f1f1; --muted: #8b8bab;
     }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; }
 
     /* NAV */
     nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      border-bottom: 1px solid rgba(124,58,237,0.2);
-      position: sticky;
-      top: 0;
-      background: rgba(13,13,26,0.95);
-      backdrop-filter: blur(12px);
-      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 40px; border-bottom: 1px solid rgba(124,58,237,0.2);
+      position: sticky; top: 0; background: rgba(13,13,26,0.97);
+      backdrop-filter: blur(12px); z-index: 100;
     }
-    .logo {
-      font-size: 1.4rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--purple-light), var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-decoration: none;
-    }
-    .nav-cta {
-      background: var(--purple);
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-    }
+    .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--purple-light), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .nav-right { display: flex; gap: 12px; align-items: center; }
+    .nav-cta { background: var(--purple); color: #fff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
     .nav-cta:hover { background: var(--purple-light); }
+    #connectWalletBtn {
+      background: transparent; border: 1px solid rgba(124,58,237,0.5);
+      color: var(--purple-light); padding: 9px 18px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    #connectWalletBtn:hover { background: rgba(124,58,237,0.15); border-color: var(--purple-light); }
+    #walletAddress { font-size: 0.8rem; color: var(--green); font-weight: 600; padding: 9px 14px; background: rgba(34,197,94,0.1); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3); display: none; }
 
     /* HERO */
-    .hero {
-      text-align: center;
-      padding: 100px 24px 80px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .badge {
-      display: inline-block;
-      background: rgba(124,58,237,0.15);
-      border: 1px solid rgba(124,58,237,0.4);
-      color: var(--purple-light);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-    h1 {
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 24px;
-    }
-    h1 span {
-      background: linear-gradient(135deg, var(--purple-light), var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--muted);
-      max-width: 560px;
-      margin: 0 auto 44px;
-    }
-    .cta-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--purple), var(--purple-light));
-      color: #fff;
-      padding: 16px 36px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: opacity 0.2s, transform 0.2s;
-    }
+    .hero { text-align: center; padding: 90px 24px 70px; max-width: 800px; margin: 0 auto; }
+    .badge { display: inline-block; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: var(--purple-light); padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 28px; }
+    h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 900; line-height: 1.1; margin-bottom: 24px; }
+    h1 span { background: linear-gradient(135deg, var(--purple-light), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 540px; margin: 0 auto 44px; }
+    .cta-group { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: #fff; padding: 16px 36px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: opacity 0.2s, transform 0.2s; }
     .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text);
-      padding: 16px 36px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
+    .btn-secondary { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text); padding: 16px 36px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: background 0.2s; }
     .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
     /* STATS */
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      flex-wrap: wrap;
-      padding: 60px 24px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .stat h3 {
-      font-size: 2.4rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--purple-light), var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .stats { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; padding: 56px 24px; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .stat h3 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, var(--purple-light), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .stat p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
 
     /* FEATURES */
-    .features {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 80px 24px;
-    }
-    .section-label {
-      text-align: center;
-      color: var(--purple-light);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .features h2 {
-      text-align: center;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 800;
-      margin-bottom: 60px;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid rgba(124,58,237,0.15);
-      border-radius: 16px;
-      padding: 32px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
-    .card-icon { font-size: 2rem; margin-bottom: 16px; }
-    .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-    .card p { color: var(--muted); font-size: 0.9rem; }
+    .features { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .section-label { text-align: center; color: var(--purple-light); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+    .section-title { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 56px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .card { background: var(--card); border: 1px solid rgba(124,58,237,0.15); border-radius: 16px; padding: 30px; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover { border-color: rgba(124,58,237,0.45); transform: translateY(-3px); }
+    .card-icon { font-size: 2rem; margin-bottom: 14px; }
+    .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 0.88rem; }
+
+    /* REWARDS TIERS */
+    .rewards { background: linear-gradient(135deg, rgba(124,58,237,0.07), rgba(34,197,94,0.04)); padding: 80px 24px; }
+    .tiers { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto; }
+    .tier { background: var(--card); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; padding: 28px 22px; text-align: center; min-width: 200px; flex: 1; transition: transform 0.2s, border-color 0.2s; }
+    .tier:hover { transform: translateY(-4px); border-color: rgba(124,58,237,0.5); }
+    .tier.featured { border-color: #f59e0b; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(124,58,237,0.1)); }
+    .tier-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .tier h4 { font-weight: 800; font-size: 1rem; margin-bottom: 6px; }
+    .tier .tier-price { color: var(--green); font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+    .tier .tier-perk { color: var(--muted); font-size: 0.82rem; line-height: 1.7; }
 
     /* HOW IT WORKS */
-    .how {
-      background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(34,197,94,0.05));
-      padding: 80px 24px;
-      text-align: center;
-    }
-    .how h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
-    .how > p { color: var(--muted); max-width: 500px; margin: 0 auto 60px; }
-    .steps {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    .how { padding: 80px 24px; text-align: center; }
+    .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 880px; margin: 0 auto; }
     .step { max-width: 220px; }
-    .step-num {
-      width: 48px; height: 48px;
-      background: linear-gradient(135deg, var(--purple), var(--purple-light));
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 1.2rem;
-      margin: 0 auto 16px;
-    }
+    .step-num { width: 46px; height: 46px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; margin: 0 auto 14px; }
     .step h4 { font-weight: 700; margin-bottom: 8px; }
     .step p { color: var(--muted); font-size: 0.875rem; }
 
-    /* TOKEN */
-    .token-section {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 80px 24px;
-      text-align: center;
-    }
-    .token-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
-    .token-section p { color: var(--muted); margin-bottom: 32px; }
-    .token-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(34,197,94,0.1);
-      border: 1px solid rgba(34,197,94,0.3);
-      color: var(--green);
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
     /* CTA BANNER */
-    .cta-banner {
-      background: linear-gradient(135deg, var(--purple), #4f46e5);
-      padding: 80px 24px;
-      text-align: center;
+    .cta-banner { background: linear-gradient(135deg, var(--purple), #4f46e5); padding: 80px 24px; text-align: center; }
+    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-banner p { color: rgba(255,255,255,0.75); margin-bottom: 36px; max-width: 460px; margin-left: auto; margin-right: auto; }
+    .btn-white { background: #fff; color: var(--purple); padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1rem; display: inline-block; transition: opacity 0.2s; }
+    .btn-white:hover { opacity: 0.9; }
+
+    /* ===== CRYPTO DASHBOARD (hidden by default) ===== */
+    #cryptoDashboard {
+      display: none;
+      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(34,197,94,0.06));
+      border-top: 2px solid rgba(124,58,237,0.4);
+      border-bottom: 2px solid rgba(124,58,237,0.4);
+      padding: 60px 24px;
     }
-    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
-    .cta-banner p { color: rgba(255,255,255,0.75); margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .cta-banner .btn-white {
-      background: #fff;
-      color: var(--purple);
-      padding: 16px 40px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 1rem;
-      display: inline-block;
-      transition: opacity 0.2s;
-    }
-    .cta-banner .btn-white:hover { opacity: 0.9; }
+    #cryptoDashboard.visible { display: block; }
+    .crypto-header { text-align: center; margin-bottom: 40px; }
+    .crypto-header h2 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .crypto-header p { color: var(--muted); }
+    .crypto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; max-width: 900px; margin: 0 auto 36px; }
+    .crypto-card { background: var(--card); border: 1px solid rgba(124,58,237,0.3); border-radius: 14px; padding: 24px; text-align: center; }
+    .crypto-card .c-label { color: var(--muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .crypto-card .c-value { font-size: 1.6rem; font-weight: 900; color: var(--green); }
+    .crypto-card .c-sub { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+    .crypto-links { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .crypto-link { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: var(--purple-light); padding: 10px 22px; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 600; transition: background 0.2s; }
+    .crypto-link:hover { background: rgba(124,58,237,0.3); }
+    .nft-tier-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin: 0 auto; }
+    .tier-free { background: rgba(139,139,171,0.2); border: 1px solid var(--muted); color: var(--muted); }
+    .tier-silver { background: rgba(148,163,184,0.2); border: 1px solid #94a3b8; color: #94a3b8; }
+    .tier-gold { background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #f59e0b; }
+    .tier-platinum { background: rgba(168,85,247,0.2); border: 1px solid var(--purple-light); color: var(--purple-light); }
 
     /* FOOTER */
-    footer {
-      padding: 40px 24px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    footer a { color: var(--muted); text-decoration: none; margin: 0 12px; }
+    footer { padding: 40px 24px; text-align: center; color: var(--muted); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    footer a { color: var(--muted); text-decoration: none; margin: 0 10px; }
     footer a:hover { color: var(--text); }
 
-    @media (max-width: 600px) {
-      nav { padding: 16px 20px; }
-      .stats { gap: 32px; }
-    }
+    @media (max-width: 600px) { nav { padding: 14px 18px; } .stats { gap: 30px; } .nav-right { gap: 8px; } }
   </style>
 </head>
 <body>
 
   <nav>
     <a class="logo" href="/">🛍️ Bag Guy</a>
-    <a class="nav-cta" href="#waitlist">Get Early Access</a>
+    <div class="nav-right">
+      <button id="connectWalletBtn" onclick="connectWallet()">🔗 Connect Wallet</button>
+      <span id="walletAddress"></span>
+      <a class="nav-cta" href="#download">Download App</a>
+    </div>
   </nav>
 
+  <!-- ===== DEFAULT: GROCERY SAVINGS VIEW ===== -->
+
   <section class="hero">
-    <div class="badge">🚀 Now in Beta</div>
-    <h1>Save More on <span>Every Purchase</span></h1>
-    <p>Bag Guy finds real-time deals, stacks discounts automatically, and rewards you with crypto every time you save. Shopping, supercharged.</p>
+    <div class="badge">🚀 Now Available</div>
+    <h1>Save More on <span>Every Grocery Run</span></h1>
+    <p>Bag Guy scans any barcode, finds instant coupons, and stacks your savings automatically. Earn Savings Stars with every shop — redeem for real cash back.</p>
     <div class="cta-group">
-      <a href="#waitlist" class="btn-primary">Download the App</a>
+      <a href="#download" class="btn-primary">📱 Download Free</a>
       <a href="#how" class="btn-secondary">See How It Works</a>
     </div>
   </section>
 
   <div class="stats">
-    <div class="stat">
-      <h3>$BGT</h3>
-      <p>Native Reward Token</p>
+    <div class="stat"><h3>$47</h3><p>Average monthly savings</p></div>
+    <div class="stat"><h3>10K+</h3><p>Stores covered</p></div>
+    <div class="stat"><h3>Real-Time</h3><p>Deal detection</p></div>
+    <div class="stat"><h3>$0</h3><p>To download & start saving</p></div>
+  </div>
+
+  <!-- ===== CRYPTO DASHBOARD (wallet-gated) ===== -->
+  <div id="cryptoDashboard">
+    <div class="crypto-header">
+      <h2>⚡ Your Crypto Dashboard</h2>
+      <p id="cryptoWalletLabel">Wallet connected — BGT balance and NFT tier loaded</p>
+      <br/>
+      <div id="nftTierBadge" class="nft-tier-badge tier-free">🛍️ Bag Guy Member</div>
     </div>
-    <div class="stat">
-      <h3>10K+</h3>
-      <p>Stores Supported</p>
+    <div class="crypto-grid">
+      <div class="crypto-card">
+        <div class="c-label">BGT Balance</div>
+        <div class="c-value" id="bgtBalance">—</div>
+        <div class="c-sub">Bag Guy Token (Polygon)</div>
+      </div>
+      <div class="crypto-card">
+        <div class="c-label">NFT Tier</div>
+        <div class="c-value" id="nftTierValue">—</div>
+        <div class="c-sub">VIP Loyalty NFT</div>
+      </div>
+      <div class="crypto-card">
+        <div class="c-label">Stars Multiplier</div>
+        <div class="c-value" id="starsMultiplier">1×</div>
+        <div class="c-sub">Savings Stars boost</div>
+      </div>
+      <div class="crypto-card">
+        <div class="c-label">Contract</div>
+        <div class="c-value" style="font-size:0.75rem;word-break:break-all;color:var(--purple-light);">0x9f50...913c</div>
+        <div class="c-sub">Polygon Mainnet</div>
+      </div>
     </div>
-    <div class="stat">
-      <h3>Real-Time</h3>
-      <p>Deal Detection</p>
-    </div>
-    <div class="stat">
-      <h3>Web3</h3>
-      <p>Powered Rewards</p>
+    <div class="crypto-links">
+      <a href="/crypto" class="crypto-link">📄 Full White Paper</a>
+      <a href="https://polygonscan.com/token/0x9f5009bc4268D1BD7315d3eF74058fbDeb88E56F" target="_blank" class="crypto-link">🔍 View on Polygonscan</a>
+      <a href="https://polygonscan.com/address/0x4d791a356f3C3b5660b17c9622702d11340a38E9" target="_blank" class="crypto-link">🔥 Treasury & Burns</a>
     </div>
   </div>
 
+  <!-- ===== FEATURES ===== -->
   <section class="features">
     <p class="section-label">Features</p>
-    <h2>Built for Smarter Shoppers</h2>
+    <h2 class="section-title">Built for Smarter Shoppers</h2>
     <div class="cards">
       <div class="card">
         <div class="card-icon">🔍</div>
         <h3>Instant Barcode Scanning</h3>
-        <p>Scan any product and instantly see the best price across thousands of stores — before you put it in your cart.</p>
+        <p>Scan any product in-store and instantly see the best price, active coupons, and your member discount — before it hits your cart.</p>
       </div>
       <div class="card">
         <div class="card-icon">⚡</div>
         <h3>Live Deal Detection</h3>
-        <p>Real-time deal feeds powered by Flipp and our own data engine. Never miss a sale again.</p>
+        <p>Real-time deal feeds updated continuously. Bag Guy surfaces the best offers from your local stores automatically.</p>
       </div>
       <div class="card">
-        <div class="card-icon">🪙</div>
-        <h3>$BGT Token Rewards</h3>
-        <p>Earn Bag Guy Tokens every time you save. Stake, spend, or hold — your savings become real crypto value.</p>
+        <div class="card-icon">⭐</div>
+        <h3>Savings Stars</h3>
+        <p>Earn Stars on every scan, purchase, list, and share. Stars convert directly to USD cash back — no gimmicks, real money.</p>
       </div>
       <div class="card">
         <div class="card-icon">🛒</div>
         <h3>Smart Shopping Lists</h3>
-        <p>Build lists that auto-match deals at your favorite stores. Shop when the price is right.</p>
+        <p>Build lists that auto-match deals at your favorite stores. Shop when the price drops to your target.</p>
       </div>
       <div class="card">
-        <div class="card-icon">🏆</div>
-        <h3>Savings Leaderboards</h3>
-        <p>Compete with friends and your community. Top savers earn bonus $BGT drops every week.</p>
+        <div class="card-icon">🤖</div>
+        <h3>AI Savings Concierge</h3>
+        <p>"What's the best price on chicken this week?" — ask and get an instant answer powered by live grocery data.</p>
       </div>
       <div class="card">
-        <div class="card-icon">🔐</div>
-        <h3>NFT Membership Tiers</h3>
-        <p>Bag Guy NFT holders unlock premium deals, early features, and exclusive cashback multipliers.</p>
+        <div class="card-icon">📊</div>
+        <h3>My Rewards Dashboard</h3>
+        <p>Track your Stars balance, progress to the next tier, cash back earned, and full redemption history — all in plain USD.</p>
       </div>
     </div>
   </section>
 
+  <!-- ===== REWARDS TIERS ===== -->
+  <section class="rewards" id="rewards">
+    <p class="section-label">Rewards Program</p>
+    <h2 class="section-title">The Bag Guy Rewards Program</h2>
+    <p style="text-align:center;color:var(--muted);max-width:500px;margin:0 auto 48px;">Earn Savings Stars on every shop. Upgrade your tier to multiply your earnings and unlock premium features.</p>
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-icon">🛍️</div>
+        <h4>Bag Guy Member</h4>
+        <div class="tier-price">Free</div>
+        <div class="tier-perk">1× Stars on every scan<br/>Basic deal alerts<br/>Shopping list access<br/>Cash back redemption</div>
+      </div>
+      <div class="tier">
+        <div class="tier-icon">🥈</div>
+        <h4>VIP Silver</h4>
+        <div class="tier-price">$4.99 / mo</div>
+        <div class="tier-perk">2× Stars multiplier<br/>Priority deal alerts<br/>Price drop notifications<br/>Exclusive member coupons</div>
+      </div>
+      <div class="tier featured">
+        <div class="tier-icon">🥇</div>
+        <h4>VIP Gold</h4>
+        <div class="tier-price">$9.99 / mo</div>
+        <div class="tier-perk">3× Stars multiplier<br/>AI Savings Concierge<br/>Early access to deals<br/>Monthly bonus Stars</div>
+      </div>
+      <div class="tier">
+        <div class="tier-icon">💎</div>
+        <h4>VIP Platinum Elite</h4>
+        <div class="tier-price">$19.99 / mo</div>
+        <div class="tier-perk">5× Stars multiplier<br/>All Gold features<br/>Dedicated savings advisor<br/>Highest cash back rates</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
   <section class="how" id="how">
     <p class="section-label">How It Works</p>
-    <h2>Start Saving in 3 Steps</h2>
-    <p>No complicated setup. Just download, shop, and earn.</p>
+    <h2 class="section-title">Start Saving in 3 Steps</h2>
+    <p style="color:var(--muted);max-width:460px;margin:0 auto 52px;">No clipping. No searching. Just scan, save, and earn.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <h4>Download Bag Guy</h4>
-        <p>Available on iOS and Android. Sign up free in under a minute.</p>
+        <p>Free on iOS and Android. Sign up in under a minute.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h4>Shop as Usual</h4>
-        <p>Scan barcodes, browse deals, or just shop like normal. Bag Guy runs in the background.</p>
+        <h4>Scan & Shop</h4>
+        <p>Scan barcodes in-store. Bag Guy shows coupons, price comparisons, and your member discount instantly.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h4>Earn & Save</h4>
-        <p>Every dollar saved earns $BGT rewards. Watch your savings and token balance grow.</p>
+        <h4>Earn Stars & Cash Out</h4>
+        <p>Every dollar saved earns Savings Stars. Redeem for real USD cash back anytime.</p>
       </div>
     </div>
   </section>
 
-  <section class="token-section">
-    <p class="section-label">Tokenomics</p>
-    <h2>Powered by $BGT</h2>
-    <p>The Bag Guy Token is your share of the savings economy. Earned by shoppers, governed by the community, backed by real buying power.</p>
-    <div class="token-badge">
-      🟢 $BGT · Live on Polygon
-    </div>
-  </section>
-
-  <section class="cta-banner" id="waitlist">
-    <h2>Ready to Save Smarter?</h2>
-    <p>Join thousands of shoppers already earning rewards on every purchase.</p>
-    <a href="mailto:hello@bagguyapp.com" class="btn-white">Get Early Access →</a>
+  <!-- ===== DOWNLOAD CTA ===== -->
+  <section class="cta-banner" id="download">
+    <h2>Ready to Start Saving?</h2>
+    <p>Join thousands of shoppers already earning cash back on every grocery run. Free to download, free to start.</p>
+    <a href="mailto:hello@bagguyapp.com" class="btn-white">📱 Get Early Access →</a>
   </section>
 
   <footer>
     <p>
       <a href="mailto:hello@bagguyapp.com">Contact</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="/crypto">For Investors</a>
     </p>
     <p style="margin-top:12px;">© 2026 Bag Guy. All rights reserved.</p>
   </footer>
+
+  <!-- ===== WALLET CONNECTION SCRIPT ===== -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+  <script>
+    const BGT_ADDRESS   = '0x9f5009bc4268D1BD7315d3eF74058fbDeb88E56F';
+    const NFT_ADDRESS   = '0x897d020fd39AFaB13dadA3a9524Fc6231DBaA8B4';
+    const POLYGON_RPC   = 'https://polygon-rpc.com';
+
+    const ERC20_ABI = ['function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)'];
+    const NFT_ABI   = ['function balanceOf(address) view returns (uint256)', 'function tokenOfOwnerByIndex(address,uint256) view returns (uint256)'];
+
+    async function connectWallet() {
+      if (!window.ethereum) {
+        alert('No wallet detected. Please install MetaMask or use a Web3 browser.');
+        return;
+      }
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
+        const signer  = provider.getSigner();
+        const address = await signer.getAddress();
+
+        // Show address in nav
+        document.getElementById('connectWalletBtn').style.display = 'none';
+        const addrEl = document.getElementById('walletAddress');
+        addrEl.textContent = address.slice(0,6) + '...' + address.slice(-4) + ' ✓';
+        addrEl.style.display = 'block';
+
+        // Query Polygon
+        const polyProvider = new ethers.providers.JsonRpcProvider(POLYGON_RPC);
+        const bgtContract  = new ethers.Contract(BGT_ADDRESS, ERC20_ABI, polyProvider);
+        const nftContract  = new ethers.Contract(NFT_ADDRESS, NFT_ABI,   polyProvider);
+
+        const [rawBalance, decimals, nftCount] = await Promise.all([
+          bgtContract.balanceOf(address),
+          bgtContract.decimals(),
+          nftContract.balanceOf(address)
+        ]);
+
+        const bgtBalance = parseFloat(ethers.utils.formatUnits(rawBalance, decimals)).toLocaleString();
+        const nftOwned   = nftCount.toNumber();
+
+        // Determine tier (simplified by NFT count for now)
+        let tier = 'Member', tierClass = 'tier-free', multiplier = '1×', tierEmoji = '🛍️';
+        if (nftOwned >= 3) { tier = 'Platinum Elite'; tierClass = 'tier-platinum'; multiplier = '5×'; tierEmoji = '💎'; }
+        else if (nftOwned >= 2) { tier = 'Gold'; tierClass = 'tier-gold'; multiplier = '3×'; tierEmoji = '🥇'; }
+        else if (nftOwned >= 1) { tier = 'Silver'; tierClass = 'tier-silver'; multiplier = '2×'; tierEmoji = '🥈'; }
+
+        // Populate dashboard
+        document.getElementById('bgtBalance').textContent       = bgtBalance;
+        document.getElementById('nftTierValue').textContent     = tier;
+        document.getElementById('starsMultiplier').textContent  = multiplier;
+        document.getElementById('cryptoWalletLabel').textContent = `Connected: ${address.slice(0,6)}...${address.slice(-4)}`;
+
+        const badge = document.getElementById('nftTierBadge');
+        badge.className = `nft-tier-badge ${tierClass}`;
+        badge.textContent = `${tierEmoji} VIP ${tier}`;
+
+        // Show crypto dashboard
+        document.getElementById('cryptoDashboard').classList.add('visible');
+
+      } catch (err) {
+        console.error('Wallet connection error:', err);
+        alert('Connection failed: ' + (err.message || 'Unknown error'));
+      }
+    }
+  </script>
 
 </body>
 </html>
