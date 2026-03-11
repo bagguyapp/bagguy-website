@@ -81,26 +81,24 @@
     .btn-white{background:#fff;color:var(--purple);padding:15px 38px;border-radius:12px;text-decoration:none;font-weight:800;font-size:1rem;display:inline-block;transition:opacity .2s}
     .btn-white:hover{opacity:.92}
 
-    /* CRYPTO DASHBOARD — hidden by default */
-    #cryptoDashboard{display:none;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(34,197,94,.06));border-top:1px solid var(--border);padding:60px 24px}
-    #cryptoDashboard.visible{display:block}
-    .crypto-inner{max-width:900px;margin:0 auto}
-    .crypto-inner h2{text-align:center;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;margin-bottom:8px}
-    .crypto-inner>.subtitle{text-align:center;color:var(--muted);margin-bottom:40px}
-    .crypto-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:36px}
-    .crypto-card{background:var(--card);border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:24px;text-align:center}
-    .crypto-card .label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-    .crypto-card .value{font-size:1.6rem;font-weight:900;color:var(--green)}
-    .crypto-card .sub{font-size:.78rem;color:var(--muted);margin-top:4px}
-    .nft-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.9rem;margin:0 auto 28px;display:flex;justify-content:center}
-    .nft-badge.free{background:rgba(139,139,171,.1);border:1px solid rgba(139,139,171,.3);color:var(--muted)}
-    .nft-badge.silver{background:rgba(192,192,192,.1);border:1px solid rgba(192,192,192,.4);color:#c0c0c0}
-    .nft-badge.gold{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.4);color:#ffd700}
-    .nft-badge.platinum{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.4);color:var(--pl)}
-    .crypto-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .crypto-links a{background:rgba(124,58,237,.15);border:1px solid var(--border);color:var(--pl);padding:9px 18px;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:600;transition:background .2s}
-    .crypto-links a:hover{background:rgba(124,58,237,.28)}
-    #walletAddress{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:20px;font-family:monospace}
+    /* BGT TOKEN SECTION */
+    .bgt-section{background:linear-gradient(135deg,rgba(153,69,255,.08),rgba(20,241,149,.05));border-top:1px solid rgba(153,69,255,.18);padding:72px 24px}
+    .bgt-inner{max-width:900px;margin:0 auto;text-align:center}
+    .bgt-inner h2{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;margin-bottom:10px}
+    .bgt-inner>.sub{color:var(--muted);margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto}
+    .bgt-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+    .bgt-card{background:var(--card);border:1px solid rgba(153,69,255,.2);border-radius:14px;padding:20px;text-align:center}
+    .bgt-card .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .bgt-card .value{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#9945FF,#14F195);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .bgt-card .sub{font-size:.75rem;color:var(--muted);margin-top:4px}
+    .bgt-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+    .bgt-links a{background:rgba(153,69,255,.15);border:1px solid rgba(153,69,255,.25);color:#9945FF;padding:10px 20px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:700;transition:background .2s}
+    .bgt-links a:hover{background:rgba(153,69,255,.28)}
+    .mint-row{display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid rgba(153,69,255,.18);border-radius:10px;padding:10px 16px;flex-wrap:wrap;justify-content:center}
+    .mint-row .mlabel{color:var(--muted);font-size:.75rem;font-weight:600}
+    .mint-row .maddr{font-family:monospace;color:#14F195;font-size:.78rem}
+    .copy-btn{background:rgba(153,69,255,.2);border:none;color:#9945FF;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700}
+    .copy-btn:hover{background:rgba(153,69,255,.35)}
 
     /* FOOTER */
     footer{padding:38px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06)}
@@ -115,8 +113,8 @@
 <nav>
   <a class="logo" href="/">🛍️ Bag Guy</a>
   <div class="nav-right">
+    <a href="/crypto" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">BGT Token</a>
     <a class="btn-nav" href="#download">Download Free</a>
-    <button id="walletBtn" onclick="connectWallet()">🔗 Connect Wallet</button>
   </div>
 </nav>
 
@@ -221,39 +219,43 @@
   <p style="margin-top:16px;font-size:.8rem;opacity:.7">Android APK — direct install. Enable "Install unknown apps" in your phone settings.</p>
 </div>
 
-<!-- CRYPTO DASHBOARD — hidden until wallet connected -->
-<div id="cryptoDashboard">
-  <div class="crypto-inner">
-    <h2>⚡ Crypto Dashboard</h2>
-    <p class="subtitle">Connected wallet — your on-chain Bag Guy data</p>
-    <div id="walletAddress"></div>
-    <div id="nftBadgeWrap"></div>
-    <div class="crypto-cards">
-      <div class="crypto-card">
-        <div class="label">BGT Balance</div>
-        <div class="value" id="bgtBalance">—</div>
-        <div class="sub">Bag Guy Token</div>
+<!-- BGT TOKEN SECTION -->
+<div class="bgt-section" id="token">
+  <div class="bgt-inner">
+    <h2>🟣 BGT — Live on Solana</h2>
+    <p class="sub">Bag Guy Token is live and tradeable. Earn BGT on every grocery scan or buy it now on Jupiter.</p>
+    <div class="bgt-cards">
+      <div class="bgt-card">
+        <div class="label">Total Supply</div>
+        <div class="value">1,000,000,000</div>
+        <div class="sub">BGT — Fixed forever</div>
       </div>
-      <div class="crypto-card">
-        <div class="label">NFT Tier</div>
-        <div class="value" id="nftTier" style="font-size:1.1rem">—</div>
-        <div class="sub">Membership Level</div>
-      </div>
-      <div class="crypto-card">
-        <div class="label">Stars Multiplier</div>
-        <div class="value" id="starsMultiplier">—</div>
-        <div class="sub">From NFT tier</div>
-      </div>
-      <div class="crypto-card">
+      <div class="bgt-card">
         <div class="label">Network</div>
-        <div class="value" style="font-size:1rem;color:var(--pl)">Polygon</div>
-        <div class="sub">MATIC mainnet</div>
+        <div class="value">Solana</div>
+        <div class="sub">SPL Token</div>
+      </div>
+      <div class="bgt-card">
+        <div class="label">DEX</div>
+        <div class="value" style="font-size:1rem">Raydium + Jupiter</div>
+        <div class="sub">Live & tradeable</div>
+      </div>
+      <div class="bgt-card">
+        <div class="label">Tax</div>
+        <div class="value">0%</div>
+        <div class="sub">No transfer fee</div>
       </div>
     </div>
-    <div class="crypto-links">
-      <a href="/crypto">📄 Full White Paper</a>
-      <a href="https://polygonscan.com/token/0x9f5009bc4268D1BD7315d3eF74058fbDeb88E56F" target="_blank">🔍 BGT on Polygonscan</a>
-      <a href="https://polygonscan.com/address/0x4d791a356f3C3b5660b17c9622702d11340a38E9" target="_blank">🏦 Treasury</a>
+    <div class="bgt-links">
+      <a href="https://jup.ag/swap/SOL-32Xuo5fPEB1Qcs3QYn7k1kcHMjU3RYNFcDK1YZgFNJoU" target="_blank">🪐 Buy on Jupiter</a>
+      <a href="https://raydium.io/liquidity/increase/?mode=add&pool_id=7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">💧 Add Liquidity</a>
+      <a href="https://www.dexscreener.com/solana/7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">📊 DEX Screener</a>
+      <a href="/crypto">📄 Tokenomics</a>
+    </div>
+    <div class="mint-row">
+      <span class="mlabel">Mint:</span>
+      <span class="maddr">32Xuo5fPEB1Qcs3QYn7k1kcHMjU3RYNFcDK1YZgFNJoU</span>
+      <button class="copy-btn" onclick="copyMint()" id="copyBtn">Copy</button>
     </div>
   </div>
 </div>
@@ -263,129 +265,29 @@
     <a href="mailto:hello@bagguyapp.com">Contact</a>
     <a href="/privacy">Privacy</a>
     <a href="/terms">Terms</a>
-    <a href="/crypto">For Investors</a>
+    <a href="/crypto">BGT Token</a>
   </p>
   <p style="margin-top:12px">© 2026 Bag Guy. All rights reserved.</p>
 </footer>
 
 <script>
-  // Contract addresses (Polygon mainnet)
-  const BGT_TOKEN   = '0x9f5009bc4268D1BD7315d3eF74058fbDeb88E56F';
-  const BAG_NFT     = '0x897d020fd39AFaB13dadA3a9524Fc6231DBaA8B4';
-  const POLYGON_RPC = 'https://polygon-rpc.com';
+function copyMint() {
+  const addr = '32Xuo5fPEB1Qcs3QYn7k1kcHMjU3RYNFcDK1YZgFNJoU';
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = addr; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    document.getElementById('copyBtn').textContent = '✅ Copied!';
+    setTimeout(() => { document.getElementById('copyBtn').textContent = 'Copy'; }, 2000);
+  });
+}
+// REMOVED: Polygon wallet connect (BGT moved to Solana)
 
-  const ERC20_ABI = [
-    'function balanceOf(address) view returns (uint256)',
-    'function decimals() view returns (uint8)'
-  ];
-  const NFT_ABI = [
-    'function balanceOf(address) view returns (uint256)',
-    'function tokenOfOwnerByIndex(address,uint256) view returns (uint256)'
-  ];
 
-  async function connectWallet() {
-    const btn = document.getElementById('walletBtn');
-    if (!window.ethereum) {
-      alert('No wallet detected. Please install MetaMask or another Web3 wallet to access the crypto dashboard.');
-      return;
-    }
-    try {
-      btn.textContent = 'Connecting...';
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const address = accounts[0];
-
-      // Switch to Polygon
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x89' }]
-        });
-      } catch (e) {
-        if (e.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: '0x89',
-              chainName: 'Polygon Mainnet',
-              nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-              rpcUrls: ['https://polygon-rpc.com'],
-              blockExplorerUrls: ['https://polygonscan.com']
-            }]
-          });
-        }
-      }
-
-      btn.textContent = '✅ ' + address.slice(0,6) + '...' + address.slice(-4);
-      btn.classList.add('connected');
-
-      document.getElementById('walletAddress').textContent = 'Wallet: ' + address;
-
-      // Load ethers via CDN then query chain
-      if (!window.ethers) {
-        await loadScript('https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js');
-      }
-
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      
-      // BGT Balance
-      try {
-        const token = new ethers.Contract(BGT_TOKEN, ERC20_ABI, provider);
-        const [bal, dec] = await Promise.all([token.balanceOf(address), token.decimals()]);
-        const formatted = parseFloat(ethers.utils.formatUnits(bal, dec)).toLocaleString('en-US', {maximumFractionDigits: 2});
-        document.getElementById('bgtBalance').textContent = formatted;
-      } catch(e) { document.getElementById('bgtBalance').textContent = '0'; }
-
-      // NFT tier
-      let tier = 'Member', multiplier = '1x';
-      try {
-        const nft = new ethers.Contract(BAG_NFT, NFT_ABI, provider);
-        const nftBal = await nft.balanceOf(address);
-        if (nftBal.gt(0)) {
-          const tokenId = await nft.tokenOfOwnerByIndex(address, 0);
-          const id = tokenId.toNumber();
-          if (id % 3 === 0) { tier = '💎 Platinum Elite'; multiplier = '5x'; }
-          else if (id % 2 === 0) { tier = '🥇 Gold'; multiplier = '3x'; }
-          else { tier = '🥈 Silver'; multiplier = '2x'; }
-        }
-      } catch(e) {}
-
-      document.getElementById('nftTier').textContent = tier;
-      document.getElementById('starsMultiplier').textContent = multiplier;
-
-      // NFT badge
-      const tierKey = tier.includes('Platinum') ? 'platinum' : tier.includes('Gold') ? 'gold' : tier.includes('Silver') ? 'silver' : 'free';
-      const badgeLabels = {platinum:'💎 VIP Platinum Elite', gold:'🥇 VIP Gold', silver:'🥈 VIP Silver', free:'🛍️ Bag Guy Member'};
-      document.getElementById('nftBadgeWrap').innerHTML = `<div class="nft-badge ${tierKey}" style="margin-bottom:28px">${badgeLabels[tierKey]}</div>`;
-
-      // Show dashboard
-      document.getElementById('cryptoDashboard').classList.add('visible');
-      document.getElementById('cryptoDashboard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    } catch(e) {
-      btn.textContent = '🔗 Connect Wallet';
-      btn.classList.remove('connected');
-      if (e.code !== 4001) console.error(e);
-    }
-  }
-
-  function loadScript(src) {
-    return new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = src; s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-
-  // Handle account changes
-  if (window.ethereum) {
-    window.ethereum.on('accountsChanged', (accounts) => {
-      if (!accounts.length) {
-        document.getElementById('walletBtn').textContent = '🔗 Connect Wallet';
-        document.getElementById('walletBtn').classList.remove('connected');
-        document.getElementById('cryptoDashboard').classList.remove('visible');
-      }
-    });
-  }
 </script>
 
 </body>
