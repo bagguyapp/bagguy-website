@@ -1,20 +1,14 @@
 {
   "name": "Bag Guy Token",
   "symbol": "BGT",
-  "description": "Bag Guy Token (BGT) is the native reward token of the Bag Guy grocery savings app. Earn BGT on every scan, redeem for cash back, and participate in governance.",
+  "description": "The native reward token of the Bag Guy grocery savings app. Earned on every scan. Fixed supply. Live on Solana, Base, and BNB Chain.",
   "image": "https://bagguyapp.com/assets/bgt-logo.png",
-  "external_url": "https://bagguyapp.com",
+  "external_url": "https://bagguyapp.com/crypto",
   "attributes": [
-    { "trait_type": "Chain", "value": "Solana" },
-    { "trait_type": "Type", "value": "Utility Token" },
-    { "trait_type": "Total Supply", "value": "1,000,000,000" }
-  ],
-  "properties": {
-    "category": "token",
-    "links": {
-      "website": "https://bagguyapp.com",
-      "twitter": "https://twitter.com/bagguyapp",
-      "telegram": null
-    }
-  }
+    { "trait_type": "Network", "value": "Solana" },
+    { "trait_type": "Supply", "value": "1,000,000,000" },
+    { "trait_type": "Mint Authority", "value": "None" },
+    { "trait_type": "Freeze Authority", "value": "None" },
+    { "trait_type": "Mutable", "value": "false" }
+  ]
 }
