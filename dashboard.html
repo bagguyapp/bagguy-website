@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Bag Guy</title>
+  <meta name="robots" content="noindex"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0d0d1a;--card:#13132a;--purple:#7c3aed;--pl:#a855f7;--green:#22c55e;--text:#f1f1f1;--muted:#8b8bab;--border:rgba(124,58,237,.18);--danger:#ef4444}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(13,13,26,.96);backdrop-filter:blur(12px);gap:16px;flex-wrap:wrap}
+    .logo{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .nav-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .nav-right a,.nav-right button{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
+    .nav-right a:hover,.nav-right button:hover{color:var(--text)}
+    .logout-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+    .logout-btn:hover{border-color:var(--pl);color:var(--pl)}
+    main{max-width:1100px;margin:0 auto;padding:48px 24px}
+    header.page-header{margin-bottom:32px}
+    .eyebrow{color:var(--pl);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+    h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:900;line-height:1.15}
+    h1 span{background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{color:var(--muted);margin-top:6px;font-size:.95rem}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:32px}
+    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+    .stat-card .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-weight:700}
+    .stat-card .value{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:24px}
+    .panel h2{font-size:.85rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+    pre{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted);max-height:280px;overflow:auto;font-family:'SF Mono',Menlo,monospace}
+    .msg{font-size:.9rem;padding:12px 14px;border-radius:10px;margin-top:16px;display:none}
+    .msg.error{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--danger)}
+    .loading{color:var(--muted);font-size:.9rem}
+    footer{padding:38px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06);margin-top:60px}
+    footer a{color:var(--muted);text-decoration:none;margin:0 10px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">🛍️ Bag Guy</a>
+  <div class="nav-right">
+    <span id="navEmail" style="color:var(--muted);font-size:.82rem"></span>
+    <button class="logout-btn" id="logoutBtn">Log out</button>
+  </div>
+</nav>
+
+<main>
+  <header class="page-header">
+    <div class="eyebrow">Dashboard</div>
+    <h1>Welcome <span id="hello">back</span></h1>
+    <p class="subtitle">Your savings and activity at a glance.</p>
+  </header>
+
+  <div id="errMsg" class="msg"></div>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="label">Users</div><div class="value" id="statUsers">—</div></div>
+    <div class="stat-card"><div class="label">Receipts Scanned</div><div class="value" id="statReceipts">—</div></div>
+    <div class="stat-card"><div class="label">Total Savings</div><div class="value" id="statSavings">—</div></div>
+  </div>
+
+  <section class="panel">
+    <h2>Account</h2>
+    <pre id="accountPanel" class="loading">Loading…</pre>
+  </section>
+
+  <section class="panel">
+    <h2>Raw stats payload</h2>
+    <pre id="rawPanel" class="loading">Loading…</pre>
+  </section>
+</main>
+
+<footer>
+  <p>
+    <a href="mailto:hello@bagguyapp.com">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </p>
+</footer>
+
+<script src="/assets/auth.js"></script>
+<script>
+(() => {
+  if (!BagGuyAuth.isLoggedIn()) { location.href = '/login.html'; return; }
+
+  const errMsg = document.getElementById('errMsg');
+  function showError(text){ errMsg.textContent = text; errMsg.className = 'msg error'; }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    BagGuyAuth.logout();
+    location.href = '/';
+  });
+
+  async function load() {
+    const token = BagGuyAuth.getToken();
+    const headers = { 'authorization': 'Bearer ' + token };
+
+    try {
+      const [meR, statsR] = await Promise.all([
+        fetch(BagGuyAuth.API + '/auth/me', { headers }),
+        fetch(BagGuyAuth.API + '/stats', { headers }),
+      ]);
+
+      if (meR.status === 401) {
+        BagGuyAuth.logout();
+        location.href = '/login.html';
+        return;
+      }
+
+      if (meR.ok) {
+        const me = await meR.json();
+        document.getElementById('hello').textContent = me.email?.split('@')[0] || 'back';
+        document.getElementById('navEmail').textContent = me.email || '';
+        document.getElementById('accountPanel').textContent = JSON.stringify(me, null, 2);
+        document.getElementById('accountPanel').classList.remove('loading');
+      } else {
+        showError('Could not load account: HTTP ' + meR.status);
+      }
+
+      if (statsR.ok) {
+        const s = await statsR.json();
+        document.getElementById('statUsers').textContent = s.users ?? '—';
+        document.getElementById('statReceipts').textContent = s.receiptsScanned ?? s.receipts ?? '—';
+        const sv = s.savings ?? 0;
+        document.getElementById('statSavings').textContent = typeof sv === 'number' ? ('$' + sv.toFixed(2)) : sv;
+        document.getElementById('rawPanel').textContent = JSON.stringify(s, null, 2);
+        document.getElementById('rawPanel').classList.remove('loading');
+      } else {
+        document.getElementById('rawPanel').textContent = '(unreachable, HTTP ' + statsR.status + ')';
+      }
+    } catch (e) {
+      showError('Network error: ' + (e.message || e));
+    }
+  }
+
+  load();
+  setInterval(load, 15000);
+})();
+</script>
+</body>
+</html>

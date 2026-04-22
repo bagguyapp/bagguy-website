@@ -112,7 +112,7 @@
 
 <nav>
   <a class="logo" href="/">🛍️ Bag Guy</a>
-  <div class="nav-right">
+  <div class="nav-right" id="navRight">
     <a href="/crypto" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">BGT Token</a>
     <a class="btn-nav" href="#download">Download Free</a>
   </div>
@@ -290,5 +290,8 @@ function copyMint() {
 
 </script>
 
+
+<script src="/assets/auth.js"></script>
+<script>BagGuyAuth.paintNav();</script>
 </body>
 </html>
