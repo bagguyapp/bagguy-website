@@ -47,6 +47,21 @@
     .matched-items li{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:.88rem}
     .matched-items .item-name{font-weight:600;color:var(--text)}
     .matched-items .item-saving{color:var(--green);font-weight:800}
+    .receipts-table{width:100%;border-collapse:collapse;font-size:.88rem}
+    .receipts-table th{text-align:left;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 14px;border-bottom:1px solid var(--border)}
+    .receipts-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+    .receipts-table tr:last-child td{border-bottom:none}
+    .receipts-table tbody tr:hover{background:rgba(124,58,237,.06)}
+    .receipts-table .td-date{color:var(--muted);white-space:nowrap}
+    .receipts-table .td-store{font-weight:600}
+    .receipts-table .td-items{color:var(--muted)}
+    .receipts-table .td-savings{color:var(--green);font-weight:800;white-space:nowrap}
+    .receipts-table .td-status{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .status-done{color:var(--green)}
+    .status-pending{color:var(--pl)}
+    .status-failed{color:var(--danger)}
+    .empty-state{color:var(--muted);font-size:.9rem;padding:20px 0;text-align:center}
+    @media(max-width:640px){.receipts-table th:nth-child(4),.receipts-table td:nth-child(4){display:none}}
     footer{padding:38px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06);margin-top:60px}
     footer a{color:var(--muted);text-decoration:none;margin:0 10px}
   </style>
@@ -89,6 +104,11 @@
       <div class="scan-summary" id="scanSummary"></div>
       <ul class="matched-items" id="matchedItems"></ul>
     </div>
+  </section>
+
+  <section class="panel">
+    <h2>Recent Receipts</h2>
+    <div id="receiptsBody"><p class="loading">Loading…</p></div>
   </section>
 
   <section class="panel">
@@ -168,6 +188,54 @@
   load();
   setInterval(load, 15000);
 
+  /* ── Receipts History ── */
+  const receiptsBody = document.getElementById('receiptsBody');
+
+  async function loadReceipts() {
+    const token = BagGuyAuth.getToken();
+    try {
+      const res = await fetch(BagGuyAuth.API + '/receipts', {
+        headers: { 'authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        receiptsBody.innerHTML = '<p class="empty-state">Could not load receipts (HTTP ' + res.status + ')</p>';
+        return;
+      }
+      const data = await res.json();
+      const receipts = Array.isArray(data) ? data : (data.receipts || data.items || []);
+      if (receipts.length === 0) {
+        receiptsBody.innerHTML = '<p class="empty-state">No receipts yet. Scan your first receipt above!</p>';
+        return;
+      }
+      let html = '<table class="receipts-table"><thead><tr><th>Date</th><th>Store</th><th>Items</th><th>Savings</th><th>Status</th></tr></thead><tbody>';
+      receipts.forEach(function(r) {
+        const date = r.created_at || r.date || r.scanned_at || '';
+        let fmtDate = date;
+        if (date) { try { fmtDate = new Date(date).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(_){} }
+        const store = r.store || r.merchant || r.store_name || '—';
+        const items = r.item_count ?? r.items_count ?? (Array.isArray(r.items) ? r.items.length : '—');
+        const savings = r.savings ?? r.total_savings ?? 0;
+        const fmtSavings = typeof savings === 'number' ? '$' + savings.toFixed(2) : savings;
+        const status = (r.status || 'done').toLowerCase();
+        const statusClass = status === 'done' || status === 'complete' || status === 'completed' ? 'status-done' : status === 'pending' || status === 'processing' ? 'status-pending' : 'status-failed';
+        html += '<tr>' +
+          '<td class="td-date">' + fmtDate + '</td>' +
+          '<td class="td-store">' + store + '</td>' +
+          '<td class="td-items">' + items + '</td>' +
+          '<td class="td-savings">' + fmtSavings + '</td>' +
+          '<td class="td-status ' + statusClass + '">' + status + '</td>' +
+          '</tr>';
+      });
+      html += '</tbody></table>';
+      receiptsBody.innerHTML = html;
+    } catch (e) {
+      receiptsBody.innerHTML = '<p class="empty-state">Failed to load receipts.</p>';
+    }
+  }
+
+  loadReceipts();
+  setInterval(loadReceipts, 15000);
+
   /* ── Receipt Scanner ── */
   const scanBtn = document.getElementById('scanBtn');
   const receiptInput = document.getElementById('receiptInput');
@@ -230,6 +298,7 @@
 
       scanResults.classList.add('visible');
       scanStatus.textContent = 'Scan complete.';
+      loadReceipts();
     } catch (e) {
       scanStatus.textContent = '';
       showError('Receipt scan failed: ' + (e.message || e));
