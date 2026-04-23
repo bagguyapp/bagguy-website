@@ -103,11 +103,13 @@
     if (password !== confirm) return showError('Passwords do not match.');
 
     btn.disabled = true; btn.textContent = 'Creating…';
+    const urlParams = new URLSearchParams(window.location.search);
+    const source = urlParams.get('source') || 'direct';
     try {
       const r = await fetch(BagGuyAuth.API + '/auth/signup', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, source }),
       });
       const data = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(data.detail || data.message || `HTTP ${r.status}`);

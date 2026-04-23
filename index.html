@@ -387,6 +387,17 @@
 <script>
 BagGuyAuth.paintNav();
 
+/* ── Source param passthrough ── */
+var _srcParam = new URLSearchParams(window.location.search).get('source') || '';
+// Append ?source= to all static signup links
+if (_srcParam) {
+  document.querySelectorAll('a[href*="/signup.html"]').forEach(function(a) {
+    var url = new URL(a.href, window.location.origin);
+    url.searchParams.set('source', _srcParam);
+    a.href = url.pathname + url.search;
+  });
+}
+
 /* ── Pricing tier checkout ── */
 document.querySelectorAll('.btn-tier[data-plan]').forEach(function(btn) {
   btn.addEventListener('click', async function() {
@@ -395,7 +406,9 @@ document.querySelectorAll('.btn-tier[data-plan]').forEach(function(btn) {
     errEl.textContent = '';
 
     if (!BagGuyAuth.isLoggedIn()) {
-      window.location.href = '/signup.html?plan=' + plan;
+      var signupUrl = '/signup.html?plan=' + plan;
+      if (_srcParam) signupUrl += '&source=' + encodeURIComponent(_srcParam);
+      window.location.href = signupUrl;
       return;
     }
 
