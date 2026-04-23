@@ -120,8 +120,10 @@
     .pricing-tier ul{list-style:none;padding:0;margin:0 0 24px;text-align:left}
     .pricing-tier ul li{color:var(--muted);font-size:.85rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
     .pricing-tier ul li::before{content:'✓ ';color:var(--green);font-weight:700}
-    .btn-tier{display:inline-block;background:linear-gradient(135deg,var(--purple),var(--pl));color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.9rem;transition:opacity .2s,transform .2s}
+    .btn-tier{display:inline-block;background:linear-gradient(135deg,var(--purple),var(--pl));color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.9rem;transition:opacity .2s,transform .2s;border:none;cursor:pointer;font-family:inherit}
     .btn-tier:hover{opacity:.9;transform:translateY(-2px)}
+    .btn-tier:disabled{opacity:.5;cursor:not-allowed}
+    .tier-error{color:var(--danger,#ef4444);font-size:.78rem;margin-top:10px;min-height:1.2em}
 
     /* FOOTER */
     footer{padding:38px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06)}
@@ -249,7 +251,8 @@
         <li>Ad-free experience</li>
         <li>Early access to new features</li>
       </ul>
-      <a href="/signup.html?plan=silver" class="btn-tier">Start free trial</a>
+      <button class="btn-tier" data-plan="silver">Start free trial</button>
+      <div class="tier-error" data-tier-error="silver"></div>
     </div>
     <div class="pricing-tier popular">
       <div class="tier-icon">🥇</div>
@@ -263,7 +266,8 @@
         <li>Family sharing (up to 4)</li>
         <li>Priority customer support</li>
       </ul>
-      <a href="/signup.html?plan=gold" class="btn-tier">Start free trial</a>
+      <button class="btn-tier" data-plan="gold">Start free trial</button>
+      <div class="tier-error" data-tier-error="gold"></div>
     </div>
     <div class="pricing-tier">
       <div class="tier-icon">💎</div>
@@ -277,7 +281,8 @@
         <li>Dedicated support agent</li>
         <li>Highest cashback rate</li>
       </ul>
-      <a href="/signup.html?plan=platinum" class="btn-tier">Start free trial</a>
+      <button class="btn-tier" data-plan="platinum">Start free trial</button>
+      <div class="tier-error" data-tier-error="platinum"></div>
     </div>
   </div>
 </div>
@@ -378,8 +383,48 @@
 
 </script>
 
-
 <script src="/assets/auth.js"></script>
-<script>BagGuyAuth.paintNav();</script>
+<script>
+BagGuyAuth.paintNav();
+
+/* ── Pricing tier checkout ── */
+document.querySelectorAll('.btn-tier[data-plan]').forEach(function(btn) {
+  btn.addEventListener('click', async function() {
+    var plan = btn.getAttribute('data-plan');
+    var errEl = document.querySelector('[data-tier-error="' + plan + '"]');
+    errEl.textContent = '';
+
+    if (!BagGuyAuth.isLoggedIn()) {
+      window.location.href = '/signup.html?plan=' + plan;
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Redirecting…';
+    try {
+      var res = await fetch(BagGuyAuth.API + '/billing/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + BagGuyAuth.getToken()
+        },
+        body: JSON.stringify({ plan: plan })
+      });
+      var data = await res.json().catch(function(){ return {}; });
+      if (!res.ok) throw new Error(data.detail || data.message || 'HTTP ' + res.status);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (e) {
+      errEl.textContent = e.message || 'Checkout failed — try again.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Start free trial';
+    }
+  });
+});
+</script>
 </body>
 </html>

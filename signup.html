@@ -113,6 +113,28 @@
       if (!r.ok) throw new Error(data.detail || data.message || `HTTP ${r.status}`);
       BagGuyAuth.setToken(data.token);
       BagGuyAuth.setUser(data.user);
+
+      // If a plan was specified, redirect to Stripe Checkout
+      const planParam = new URLSearchParams(window.location.search).get('plan');
+      if (planParam && ['silver','gold','platinum'].includes(planParam)) {
+        btn.textContent = 'Setting up billing…';
+        try {
+          const cr = await fetch(BagGuyAuth.API + '/billing/checkout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + data.token
+            },
+            body: JSON.stringify({ plan: planParam })
+          });
+          const cd = await cr.json().catch(() => ({}));
+          if (cr.ok && cd.url) {
+            window.location.href = cd.url;
+            return;
+          }
+        } catch (_) {}
+        // If checkout fails, fall through to dashboard
+      }
       location.href = '/dashboard.html';
     } catch (err) {
       showError(err.message || 'Signup failed');

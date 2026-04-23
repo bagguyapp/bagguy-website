@@ -32,6 +32,15 @@
     .msg{font-size:.9rem;padding:12px 14px;border-radius:10px;margin-top:16px;display:none}
     .msg.error{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--danger)}
     .loading{color:var(--muted);font-size:.9rem}
+    .toast-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-radius:12px;font-size:.9rem;font-weight:600;margin-bottom:20px;animation:slideDown .3s ease}
+    .toast-banner.success{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+    .toast-banner.warning{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#fbbf24}
+    .toast-banner .close-toast{background:none;border:none;color:inherit;font-size:1.2rem;cursor:pointer;padding:0 4px;opacity:.7;font-family:inherit}
+    .toast-banner .close-toast:hover{opacity:1}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    .btn-manage{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:12px;text-decoration:none}
+    .btn-manage:hover{border-color:var(--pl);color:var(--pl)}
+    .btn-manage:disabled{opacity:.5;cursor:not-allowed}
     .scan-section{margin-top:24px}
     .scan-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit}
     .scan-btn:hover{opacity:.88}
@@ -83,6 +92,7 @@
     <p class="subtitle">Your savings and activity at a glance.</p>
   </header>
 
+  <div id="toastContainer"></div>
   <div id="errMsg" class="msg"></div>
 
   <div class="stats-grid" id="statsGrid">
@@ -114,6 +124,7 @@
   <section class="panel">
     <h2>Account</h2>
     <pre id="accountPanel" class="loading">Loading…</pre>
+    <button class="btn-manage" id="manageSubBtn" style="display:none">Manage Subscription</button>
   </section>
 
   <section class="panel">
@@ -137,6 +148,76 @@
 
   const errMsg = document.getElementById('errMsg');
   function showError(text){ errMsg.textContent = text; errMsg.className = 'msg error'; }
+
+  /* ── Payment toast banners ── */
+  const params = new URLSearchParams(window.location.search);
+  const toastContainer = document.getElementById('toastContainer');
+
+  function showToast(type, message) {
+    const div = document.createElement('div');
+    div.className = 'toast-banner ' + type;
+    div.innerHTML = '<span>' + message + '</span><button class="close-toast" aria-label="Close">&times;</button>';
+    div.querySelector('.close-toast').addEventListener('click', function() { div.remove(); });
+    toastContainer.appendChild(div);
+    return div;
+  }
+
+  if (params.get('paid') === '1') {
+    const toast = showToast('success', '🎉 Welcome to your premium plan! Your subscription is active.');
+    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 8000);
+    // Refresh /auth/me to update displayed plan
+    fetch(BagGuyAuth.API + '/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
+    }).then(r => r.json()).then(me => {
+      document.getElementById('accountPanel').textContent = JSON.stringify(me, null, 2);
+      document.getElementById('accountPanel').classList.remove('loading');
+    }).catch(function(){});
+    // Clean URL
+    history.replaceState(null, '', '/dashboard.html');
+  } else if (params.get('paid') === '0') {
+    showToast('warning', 'Payment cancelled — try again anytime from the Pricing page on the homepage.');
+    history.replaceState(null, '', '/dashboard.html');
+  }
+
+  /* ── Manage Subscription ── */
+  const manageSubBtn = document.getElementById('manageSubBtn');
+
+  async function checkPlanAndShowManage() {
+    try {
+      const res = await fetch(BagGuyAuth.API + '/auth/me', {
+        headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
+      });
+      if (!res.ok) return;
+      const me = await res.json();
+      const plan = (me.plan || me.subscription || me.tier || 'free').toLowerCase();
+      if (plan !== 'free' && plan !== 'basic') {
+        manageSubBtn.style.display = 'inline-flex';
+      }
+    } catch (_) {}
+  }
+  checkPlanAndShowManage();
+
+  manageSubBtn.addEventListener('click', async function() {
+    manageSubBtn.disabled = true;
+    manageSubBtn.textContent = 'Loading…';
+    try {
+      const res = await fetch(BagGuyAuth.API + '/billing/portal', {
+        headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
+      });
+      const data = await res.json().catch(function(){ return {}; });
+      if (!res.ok) throw new Error(data.detail || data.message || 'HTTP ' + res.status);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No portal URL returned');
+      }
+    } catch (e) {
+      showError('Could not open billing portal: ' + (e.message || e));
+    } finally {
+      manageSubBtn.disabled = false;
+      manageSubBtn.textContent = 'Manage Subscription';
+    }
+  });
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
     BagGuyAuth.logout();
