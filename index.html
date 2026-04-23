@@ -27,6 +27,12 @@
     /* HERO */
     .hero{text-align:center;padding:96px 24px 72px;max-width:820px;margin:0 auto}
     .badge{display:inline-block;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.4);color:var(--pl);padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:26px}
+    .badge-live{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#4ade80;padding:7px 18px;border-radius:24px;font-size:.82rem;font-weight:700;margin-bottom:26px;transition:background .3s}
+    .badge-live:hover{background:rgba(34,197,94,.18)}
+    .badge-live .amount{color:#fff;font-weight:800}
+    .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse-dot 2s ease-in-out infinite}
+    @keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+    .live-indicator{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:18px}
     .badge-green{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#4ade80;padding:5px 14px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:26px;text-decoration:none;transition:background .2s,border-color .2s}
     .badge-green:hover{background:rgba(34,197,94,.22);border-color:rgba(34,197,94,.6)}
     h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.1;margin-bottom:22px}
@@ -137,7 +143,7 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge">🚀 Now Available</div>
+  <div class="badge-live">🛒 <span class="amount" id="savingsBadge">$—</span> saved by Bag Guy users — join them</div>
   <h1>Save Money on <span>Every Grocery Run</span></h1>
   <p>Scan any item, find the best coupons instantly, and earn real cash back with every purchase. Bag Guy does the work — you keep the savings.</p>
   <a class="badge-green" href="/signup.html">⚡ Join the waitlist</a>
@@ -145,6 +151,7 @@
     <a href="#download" class="btn-primary">Download the App — Free</a>
     <a href="#how" class="btn-secondary">See How It Works</a>
   </div>
+  <div class="live-indicator"><span class="live-dot"></span> Live</div>
 </section>
 
 <!-- STATS -->
@@ -331,6 +338,50 @@ function copyMint() {
 }
 // REMOVED: Polygon wallet connect (BGT moved to Solana)
 
+/* ── Live savings banner ── */
+(function(){
+  var badge = document.getElementById('savingsBadge');
+  var currentVal = 0;
+
+  function formatUSD(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function animateCount(from, to, duration) {
+    var start = performance.now();
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      var ease = 1 - Math.pow(1 - progress, 3);
+      var val = from + (to - from) * ease;
+      badge.textContent = formatUSD(val);
+      if (progress < 1) requestAnimationFrame(tick);
+      else currentVal = to;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function fetchSavings() {
+    fetch('https://bagguy.byorkmc.com/stats')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var savings = data.savings ?? data.total_savings ?? 0;
+        if (typeof savings !== 'number') savings = parseFloat(savings) || 0;
+        if (currentVal === 0) {
+          animateCount(0, savings, 1800);
+        } else if (savings !== currentVal) {
+          animateCount(currentVal, savings, 800);
+        }
+      })
+      .catch(function(){
+        if (currentVal === 0) badge.textContent = '$0.00';
+      });
+  }
+
+  fetchSavings();
+  setInterval(fetchSavings, 30000);
+})();
 
 </script>
 
