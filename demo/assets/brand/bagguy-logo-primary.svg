@@ -1,0 +1,7 @@
+<svg width="640" height="180" viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg">
+<rect x="30" y="35" width="110" height="110" rx="24" fill="#22C55E"/>
+<text x="170" y="105" font-size="72" font-weight="800" fill="#0F172A">Bag</text>
+<text x="310" y="105" font-size="72" font-weight="800" fill="#22C55E">Guy</text>
+<text x="170" y="140" font-size="22" fill="#0F172A">One Scan.</text>
+<text x="300" y="140" font-size="22" fill="#22C55E">All the Savings.</text>
+</svg>
