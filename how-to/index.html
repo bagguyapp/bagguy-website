@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How to Use Bag Guy</title>
+  <meta name="description" content="Learn how to use Bag Guy to scan, find deals, earn Bag Points, plan meals, build shopping lists, and share savings."/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#f7faf8;--ink:#0d1f18;--muted:#5e6f67;--green:#0aae63;--line:#dce8e1;--card:#fff;--soft:#edf7f1}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.62}
+    nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px clamp(18px,5vw,56px);border-bottom:1px solid var(--line);background:rgba(247,250,248,.94);position:sticky;top:0;backdrop-filter:blur(14px)}
+    a{color:inherit}.brand{text-decoration:none;font-weight:950}.nav a{color:var(--muted);font-weight:800;text-decoration:none;margin-left:16px}
+    main{max-width:1050px;margin:0 auto;padding:54px 22px 80px}
+    .hero{max-width:760px;margin-bottom:34px}
+    .eyebrow{display:inline-block;background:#dcfce7;color:#087246;border:1px solid #b7efce;border-radius:999px;padding:8px 13px;font-size:.78rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+    h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;letter-spacing:-.05em;margin-bottom:16px}
+    .lead{font-size:1.1rem;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px}
+    .card h2{font-size:1.25rem;margin-bottom:10px}
+    .card p,.card li{color:var(--muted);font-size:.96rem}
+    .card ol,.card ul{padding-left:20px;margin-top:10px}
+    .full{grid-column:1/-1}
+    .tip{background:var(--soft);border-left:4px solid var(--green);padding:14px;border-radius:14px;margin-top:14px;color:#29453a}
+    footer{text-align:center;border-top:1px solid var(--line);padding:30px 22px;color:var(--muted)}
+    footer a{color:#087246;font-weight:800;text-decoration:none}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.nav a{margin-left:8px;font-size:.9rem}}
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/">✓ Bag Guy</a>
+    <div class="nav"><a href="/">Home</a><a href="/support/">Support</a><a href="/privacy/">Privacy</a></div>
+  </nav>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">How to use Bag Guy</div>
+      <h1>Scan, save, earn, plan, and share.</h1>
+      <p class="lead">Bag Guy is built so a shopper can understand the first move quickly: open the app, scan, and let Bag Guy match eligible deals and rewards.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>1. Start on Home</h2>
+        <p>Home shows your savings summary, Bag Points balance, Store Credit value, local deals, weekly offers, and shortcuts.</p>
+        <ul>
+          <li>Use <strong>Scan to Save</strong> as the main action.</li>
+          <li>Open <strong>View Deals</strong> to browse offers.</li>
+          <li>Open <strong>Meal Plan</strong> to shop recipes by budget.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>2. Use Scan</h2>
+        <p>The Scan tab is the core Bag Guy flow.</p>
+        <ol>
+          <li>Show your Bag Guy Scan Code at checkout.</li>
+          <li>Scan a product barcode to find matching offers.</li>
+          <li>Scan a receipt to process eligible receipt rewards.</li>
+        </ol>
+        <div class="tip">If the backend cannot be reached in local testing, Bag Guy should show a clear connection message instead of pretending the reward was confirmed.</div>
+      </article>
+
+      <article class="card">
+        <h2>3. Save deals</h2>
+        <p>Deals are organized around real shopping categories: grocery, household, baby, health, local, weekly ads, and SNAP-friendly.</p>
+        <ul>
+          <li>Tap <strong>Save Offer</strong> or <strong>Clip</strong>.</li>
+          <li>Check quantity, size, expiration, and retailer restrictions.</li>
+          <li>Medium and low confidence matches ask you to check eligibility.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>4. Track rewards</h2>
+        <p>Rewards shows Bag Points, estimated Store Credit, recent activity, progress, and redemption actions.</p>
+        <ul>
+          <li>Receipt scans can add Bag Points after backend confirmation.</li>
+          <li>Duplicate receipt attempts use source IDs to avoid double counting.</li>
+          <li>Rewards can sync locally and reconcile with the backend.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>5. Plan meals</h2>
+        <p>The AI Meal Planner helps create recipes around your budget, family size, cook time, weekly ads, and coupon matches.</p>
+        <ul>
+          <li>Choose Low Budget, Standard, Premium, or High-End.</li>
+          <li>Tap <strong>Shop This Recipe</strong>.</li>
+          <li>Add ingredients to your Shopping List.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>6. Build a shopping list</h2>
+        <p>Shopping List pulls together manual items, recipe ingredients, saved deals, and weekly ad matches.</p>
+        <ul>
+          <li>Check off items as you shop.</li>
+          <li>Review estimated total and savings.</li>
+          <li>Use <strong>Scan at checkout</strong> when ready.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>7. Share and earn</h2>
+        <p>Shopper Share lets users share lists, recipes, coupons, weekly deals, SNAP-friendly baskets, and budget meal plans.</p>
+        <ul>
+          <li>Share inside the app, by link, QR placeholder, text/share sheet placeholder, family group, or community feed.</li>
+          <li>Bag Points can be awarded when someone saves, shops, redeems, or joins through shared content.</li>
+          <li>Reward limits, duplicate detection, and no self-referral rules are planned into the backend architecture.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>8. Use SNAP-friendly tools respectfully</h2>
+        <p>SNAP-friendly areas show EBT eligible tags where known, family essentials, healthy rewards, and budget helper tools.</p>
+        <div class="tip">Final eligibility is determined at checkout by the retailer and payment processor.</div>
+      </article>
+
+      <article class="card full">
+        <h2>Local testing checklist</h2>
+        <ol>
+          <li>Start backend: <code>venv/bin/python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload</code></li>
+          <li>Find Mac LAN IP: <code>ipconfig getifaddr en0</code></li>
+          <li>On iPhone Safari, open <code>http://MAC_LAN_IP:8000/health</code></li>
+          <li>Start Expo: <code>npx expo start -c --lan</code></li>
+          <li>Open Expo Go, tap Scan Receipt, then check Rewards history.</li>
+        </ol>
+        <div class="tip">A physical iPhone cannot use <code>127.0.0.1</code> to reach a backend running on your Mac. Use the Mac LAN IP.</div>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <strong>Bag Guy</strong><br/>
+    <a href="/">Home</a> · <a href="/support/">Support</a> · <a href="/crypto/whitepaper/">Crypto white paper</a>
+  </footer>
+</body>
+</html>

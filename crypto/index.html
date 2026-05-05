@@ -3,397 +3,274 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BGT — Bag Guy Token | Solana</title>
-  <meta name="description" content="Bag Guy Token (BGT) is a real-utility SPL token on Solana. Earned on every grocery scan. Trade on Jupiter and Raydium. 1B fixed supply."/>
-  <meta property="og:title" content="BGT — Bag Guy Token"/>
-  <meta property="og:description" content="Real utility. Fixed supply. Live on Solana. Trade BGT on Jupiter now."/>
-  <meta property="og:image" content="https://bagguyapp.com/assets/bgt-og.png"/>
+  <title>Bag Guy Crypto Rewards Layer</title>
+  <meta name="description" content="Connect a Solana wallet to access optional Bag Guy NFT membership benefits, BAG rewards, treasury transparency, and enhanced shopping rewards."/>
+  <meta property="og:title" content="Bag Guy Crypto Rewards Layer"/>
+  <meta property="og:description" content="Wallet-gated BAG and NFT rewards for Bag Guy members."/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#0a0a16;--card:#11112a;--card2:#13132e;
-      --sol:#9945FF;--sol2:#14F195;
-      --gold:#f59e0b;--green:#22c55e;
-      --text:#f1f1f1;--muted:#8b8bab;
-      --border:rgba(153,69,255,.18);
+      --bg:#06110f;--bg2:#0b1915;--panel:#0e211b;--panel2:#122820;
+      --ink:#f5fff9;--muted:#9fb5ac;--line:rgba(177,255,209,.16);
+      --green:#23c879;--mint:#c9ffe1;--gold:#f8d766;--blue:#6ba7ff;
+      --danger:#ffcf8a;--shadow:0 24px 70px rgba(0,0,0,.34);
     }
     html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.65}
-
-    /* NAV */
-    nav{display:flex;justify-content:space-between;align-items:center;padding:16px 40px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,22,.96);backdrop-filter:blur(12px);z-index:100;gap:16px;flex-wrap:wrap}
-    .logo{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--sol),var(--sol2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
-    .nav-links{display:flex;gap:24px;align-items:center}
-    .nav-links a{color:var(--muted);text-decoration:none;font-size:.88rem;transition:color .2s}
-    .nav-links a:hover{color:var(--text)}
-    .btn-buy{background:linear-gradient(135deg,var(--sol),var(--sol2));color:#000;padding:9px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:.875rem;transition:opacity .2s}
-    .btn-buy:hover{opacity:.88}
-
-    /* HERO */
-    .hero{text-align:center;padding:80px 24px 60px;max-width:820px;margin:0 auto}
-    .live-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(20,241,149,.1);border:1px solid rgba(20,241,149,.3);color:var(--sol2);padding:6px 16px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:28px}
-    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--sol2);animation:pulse 1.5s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .hero h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:900;line-height:1.08;margin-bottom:22px}
-    .hero h1 .grad{background:linear-gradient(135deg,var(--sol),var(--sol2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero p{font-size:1.1rem;color:var(--muted);max-width:560px;margin:0 auto 36px;line-height:1.7}
-    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-    .btn-primary{background:linear-gradient(135deg,var(--sol),var(--sol2));color:#000;padding:15px 36px;border-radius:12px;text-decoration:none;font-weight:800;font-size:1rem;transition:opacity .2s,transform .15s;display:inline-block}
-    .btn-primary:hover{opacity:.9;transform:translateY(-2px)}
-    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text);padding:15px 36px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;transition:border-color .2s;display:inline-block}
-    .btn-outline:hover{border-color:var(--sol)}
-
-    /* TICKER */
-    .ticker{background:rgba(153,69,255,.06);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 24px}
-    .ticker-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
-    .tick-item{text-align:center}
-    .tick-val{font-size:1.7rem;font-weight:900;background:linear-gradient(135deg,var(--sol),var(--sol2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .tick-label{color:var(--muted);font-size:.8rem;margin-top:4px}
-
-    /* MINT BOX */
-    .mint-section{max-width:820px;margin:48px auto;padding:0 24px}
-    .mint-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
-    .mint-label{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
-    .mint-addr{font-family:monospace;color:var(--sol2);font-size:.88rem;flex:1;word-break:break-all;letter-spacing:.02em}
-    .copy-btn{background:rgba(153,69,255,.18);border:1px solid var(--border);color:var(--sol);padding:8px 18px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:700;white-space:nowrap;transition:background .2s}
-    .copy-btn:hover{background:rgba(153,69,255,.32)}
-
-    /* TRADE LINKS */
-    .trade-section{max-width:820px;margin:0 auto 56px;padding:0 24px}
-    .trade-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-    .trade-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 20px;text-align:center;text-decoration:none;transition:border-color .2s,transform .15s;display:block}
-    .trade-card:hover{border-color:var(--sol);transform:translateY(-3px)}
-    .trade-icon{font-size:2rem;margin-bottom:10px}
-    .trade-name{color:var(--text);font-weight:700;font-size:1rem;margin-bottom:5px}
-    .trade-desc{color:var(--muted);font-size:.8rem}
-
-    /* TOKENOMICS */
-    .section{max-width:900px;margin:0 auto;padding:0 24px 72px}
-    .section-label{color:var(--sol);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
-    .section h2{font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;margin-bottom:12px}
-    .section>.desc{color:var(--muted);max-width:600px;margin-bottom:40px;font-size:.975rem}
-
-    .alloc-grid{display:grid;gap:12px;margin-bottom:40px}
-    .alloc-row{background:var(--card);border-radius:12px;padding:16px 20px}
-    .alloc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .alloc-name{font-weight:700;font-size:.95rem}
-    .alloc-pct{color:var(--sol2);font-weight:800;font-size:1rem}
-    .alloc-bar-bg{background:rgba(255,255,255,.07);border-radius:6px;height:8px;overflow:hidden}
-    .alloc-bar{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--sol),var(--sol2))}
-    .alloc-note{color:var(--muted);font-size:.8rem;margin-top:6px}
-
-    /* FLYWHEEL */
-    .flywheel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:40px;text-align:center}
-    .flywheel h3{font-size:1.4rem;font-weight:800;margin-bottom:8px}
-    .flywheel>.sub{color:var(--muted);margin-bottom:32px;font-size:.9rem}
-    .fw-steps{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px}
-    .fw-step{background:rgba(153,69,255,.1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;text-align:center;max-width:130px}
-    .fw-step .icon{font-size:1.8rem;margin-bottom:6px}
-    .fw-step .lbl{color:var(--text);font-size:.78rem;font-weight:600}
-    .fw-arrow{color:var(--sol);font-size:1.4rem;padding:0 6px}
-
-    /* UTILITY */
-    .utility-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:40px}
-    .util-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
-    .util-icon{font-size:1.6rem;margin-bottom:10px}
-    .util-title{font-weight:700;margin-bottom:6px}
-    .util-desc{color:var(--muted);font-size:.85rem;line-height:1.6}
-
-    /* CONTRACT BOX */
-    .contract-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:12px}
-    .contract-chain{color:var(--sol);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-    .contract-addr{font-family:monospace;color:var(--sol2);font-size:.83rem;word-break:break-all}
-    .contract-addr a{color:var(--sol2);text-decoration:none}
-    .contract-addr a:hover{text-decoration:underline}
-
-    /* FOOTER */
-    footer{padding:40px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06)}
-    footer a{color:var(--muted);text-decoration:none;margin:0 10px;transition:color .2s}
-    footer a:hover{color:var(--text)}
-    .footer-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--sol),var(--sol2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;margin-bottom:16px}
-
-    @media(max-width:600px){nav{padding:14px 18px}.fw-arrow{display:none}}
+    body{background:
+      radial-gradient(circle at 15% 5%,rgba(35,200,121,.18),transparent 34%),
+      radial-gradient(circle at 80% 20%,rgba(248,215,102,.13),transparent 28%),
+      linear-gradient(180deg,var(--bg),#020706 72%);
+      color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+    a{color:inherit}
+    nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px clamp(18px,5vw,56px);background:rgba(6,17,15,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:900;letter-spacing:.01em}
+    .mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--mint));display:grid;place-items:center;color:#06110f;font-weight:950;box-shadow:0 10px 24px rgba(35,200,121,.28)}
+    .navlinks{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .navlinks a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:700}
+    .navlinks a:hover{color:var(--ink)}
+    .nav-pill{padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04)}
+    .hero{max-width:1180px;margin:0 auto;padding:88px 22px 42px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:44px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(35,200,121,.28);background:rgba(35,200,121,.10);color:var(--mint);border-radius:999px;padding:8px 13px;font-weight:900;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+    .dot{width:8px;height:8px;border-radius:99px;background:var(--green);box-shadow:0 0 0 6px rgba(35,200,121,.13)}
+    h1{font-size:clamp(2.55rem,6vw,5rem);line-height:.98;letter-spacing:-.04em;margin-bottom:22px}
+    .grad{background:linear-gradient(135deg,var(--mint),var(--green) 45%,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:var(--muted);font-size:1.14rem;max-width:640px;margin-bottom:30px}
+    .actions{display:flex;gap:13px;flex-wrap:wrap}
+    button,.btn{appearance:none;border:0;cursor:pointer;text-decoration:none;font:inherit}
+    .primary{background:linear-gradient(135deg,var(--green),var(--mint));color:#06110f;border-radius:14px;padding:15px 22px;font-weight:950;box-shadow:0 16px 35px rgba(35,200,121,.22);transition:transform .16s,box-shadow .16s}
+    .primary:hover{transform:translateY(-2px);box-shadow:0 20px 45px rgba(35,200,121,.3)}
+    .secondary{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink);border-radius:14px;padding:15px 22px;font-weight:850;transition:background .16s,border-color .16s}
+    .secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(201,255,225,.34)}
+    .visual{border:1px solid var(--line);background:linear-gradient(180deg,rgba(18,40,32,.88),rgba(8,20,17,.94));border-radius:30px;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .visual::before{content:"";position:absolute;inset:-90px -90px auto auto;width:230px;height:230px;background:radial-gradient(circle,rgba(248,215,102,.22),transparent 67%)}
+    .wallet-card{position:relative;background:#081511;border:1px solid rgba(201,255,225,.14);border-radius:24px;padding:22px;min-height:320px;display:flex;flex-direction:column;justify-content:space-between}
+    .wallet-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+    .wallet-chip{font-size:.78rem;color:var(--mint);font-weight:900;border:1px solid rgba(201,255,225,.2);padding:7px 10px;border-radius:999px;background:rgba(201,255,225,.07)}
+    .bag-icon{width:82px;height:82px;border-radius:26px;background:linear-gradient(135deg,var(--green),var(--gold));display:grid;place-items:center;color:#06110f;font-size:2.3rem;font-weight:950}
+    .wallet-card h2{font-size:2rem;line-height:1;margin-top:28px}
+    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+    .metric{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:16px;padding:14px}
+    .metric b{display:block;font-size:1rem;color:var(--ink)}
+    .metric span{display:block;color:var(--muted);font-size:.76rem;margin-top:4px}
+    section{max-width:1180px;margin:0 auto;padding:58px 22px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:24px}
+    .section-head h2{font-size:clamp(1.8rem,4vw,3rem);line-height:1;letter-spacing:-.03em}
+    .section-head p{max-width:560px;color:var(--muted)}
+    .panel{background:rgba(14,33,27,.74);border:1px solid var(--line);border-radius:26px;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,.18)}
+    .wallet-options{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+    .wallet-option{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:left;color:var(--ink);transition:transform .15s,border-color .15s}
+    .wallet-option:hover{transform:translateY(-2px);border-color:rgba(35,200,121,.48)}
+    .wallet-option strong{display:block;margin-bottom:5px}
+    .wallet-option span{display:block;color:var(--muted);font-size:.86rem}
+    .status{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#071410;border:1px solid rgba(201,255,225,.14);border-radius:18px;padding:16px;margin-top:14px}
+    .address{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mint);word-break:break-all}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .tier{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(18,40,32,.95),rgba(9,21,17,.95));border:1px solid var(--line);border-radius:24px;padding:22px;min-height:290px;display:flex;flex-direction:column}
+    .tier.featured{border-color:rgba(248,215,102,.5);box-shadow:0 20px 55px rgba(248,215,102,.08)}
+    .badge{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--gold));color:#06110f;font-size:1.9rem;margin-bottom:18px}
+    .tier h3{font-size:1.25rem;margin-bottom:7px}
+    .tier ul{list-style:none;display:grid;gap:9px;margin:16px 0 22px;color:var(--muted);font-size:.9rem}
+    .tier li::before{content:"✓";color:var(--green);font-weight:900;margin-right:8px}
+    .tier .secondary{margin-top:auto;text-align:center;padding:12px 14px}
+    .utility{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .util-card,.flow-step{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:22px;padding:22px}
+    .util-card h3,.flow-step h3{margin-bottom:8px}
+    .util-card p,.flow-step p{color:var(--muted);font-size:.94rem}
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:step}
+    .flow-step{counter-increment:step;position:relative}
+    .flow-step::before{content:counter(step);display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:var(--green);color:#06110f;font-weight:950;margin-bottom:16px}
+    .disclaimer{border:1px solid rgba(255,207,138,.32);background:rgba(255,207,138,.08);border-radius:22px;padding:22px;color:#ffe5b3}
+    .code-note{margin-top:16px;color:var(--muted);font-size:.88rem}
+    footer{border-top:1px solid var(--line);padding:34px 22px;text-align:center;color:var(--muted)}
+    footer a{color:var(--mint);text-decoration:none;font-weight:800}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:58px}.grid,.utility,.flow{grid-template-columns:1fr 1fr}.wallet-options{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:10px}}
+    @media(max-width:560px){nav{align-items:flex-start}.navlinks{gap:10px}.grid,.utility,.flow{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr}.hero{padding-left:18px;padding-right:18px}section{padding-left:18px;padding-right:18px}h1{font-size:2.5rem}}
   </style>
 </head>
 <body>
-
-<nav>
-  <a class="logo" href="/">🛍️ Bag Guy Token</a>
-  <div class="nav-links">
-    <a href="#trade">Trade</a>
-    <a href="#tokenomics">Tokenomics</a>
-    <a href="#utility">Utility</a>
-    <a href="/">App</a>
-    <a class="btn-buy" href="https://jup.ag/swap/SOL-5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">Buy BGT →</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="live-pill"><span class="live-dot"></span> Live on Solana · Base · BNB Chain</div>
-  <h1>The Grocery<br/><span class="grad">Savings Token</span></h1>
-  <p>BGT is the native reward token of the Bag Guy app — earned on every grocery scan, backed by real user activity, fixed supply of 1 billion. Available on 3 chains.</p>
-  <div class="hero-btns">
-    <a href="https://jup.ag/swap/SOL-5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank" class="btn-primary">🪐 Buy on Jupiter</a>
-    <a href="https://raydium.io/liquidity/increase/?mode=add&pool_id=7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank" class="btn-outline">💧 Add Liquidity</a>
-  </div>
-</div>
-
-<!-- STATS TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
-    <div class="tick-item">
-      <div class="tick-val">1,000,000,000</div>
-      <div class="tick-label">Fixed Total Supply</div>
+  <!-- Crypto/NFT wallet features are web-only and not required for iOS app functionality. -->
+  <nav>
+    <a class="brand" href="/"><span class="mark">✓</span><span>Bag Guy</span></a>
+    <div class="navlinks">
+      <a href="#wallet">Wallet</a>
+      <a href="#tiers">NFT Tiers</a>
+      <a href="#utility">BAG Utility</a>
+      <a href="/crypto/whitepaper/">White Paper</a>
+      <a class="nav-pill" href="/">Shopper App</a>
     </div>
-    <div class="tick-item">
-      <div class="tick-val">999M</div>
-      <div class="tick-label">In Treasury (Phantom)</div>
-    </div>
-    <div class="tick-item">
-      <div class="tick-val">1M</div>
-      <div class="tick-label">Seeded in Raydium Pool</div>
-    </div>
-    <div class="tick-item">
-      <div class="tick-val">3 Chains</div>
-      <div class="tick-label">Solana · Base · BNB</div>
-    </div>
-    <div class="tick-item">
-      <div class="tick-val">0%</div>
-      <div class="tick-label">Tax / Transfer Fee</div>
-    </div>
-  </div>
-</div>
+  </nav>
 
-<!-- MINT ADDRESS -->
-<div class="mint-section">
-  <div class="mint-box">
-    <span class="mint-label">Mint Address</span>
-    <span class="mint-addr" id="mintAddr">5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W</span>
-    <button class="copy-btn" onclick="copyMint()" id="copyBtn">Copy</button>
-  </div>
-</div>
-
-<!-- TRADE SECTION -->
-<div class="trade-section" id="trade">
-  <div class="trade-cards">
-    <a class="trade-card" href="https://jup.ag/swap/SOL-5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">
-      <div class="trade-icon">🪐</div>
-      <div class="trade-name">Jupiter</div>
-      <div class="trade-desc">Best price aggregator for Solana. Buy BGT with SOL or any token.</div>
-    </a>
-    <a class="trade-card" href="https://raydium.io/swap/?inputMint=sol&outputMint=5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">
-      <div class="trade-icon">⚡</div>
-      <div class="trade-name">Raydium</div>
-      <div class="trade-desc">Direct swap on the BGT/SOL CPMM pool. Swap or add liquidity.</div>
-    </a>
-    <a class="trade-card" href="https://raydium.io/liquidity/increase/?mode=add&pool_id=7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">
-      <div class="trade-icon">💧</div>
-      <div class="trade-name">Add Liquidity</div>
-      <div class="trade-desc">Provide BGT/SOL liquidity on Raydium and earn trading fees.</div>
-    </a>
-    <a class="trade-card" href="https://solscan.io/token/5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">
-      <div class="trade-icon">🔍</div>
-      <div class="trade-name">Solscan</div>
-      <div class="trade-desc">On-chain explorer. Verify supply, holders, and all transactions.</div>
-    </a>
-    <a class="trade-card" href="https://www.dexscreener.com/solana/7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">
-      <div class="trade-icon">📊</div>
-      <div class="trade-name">DEX Screener</div>
-      <div class="trade-desc">Live price chart, volume, and liquidity for the BGT/SOL pool.</div>
-    </a>
-    <a class="trade-card" href="https://birdeye.so/token/5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">
-      <div class="trade-icon">🦅</div>
-      <div class="trade-name">Birdeye</div>
-      <div class="trade-desc">Portfolio tracking, price alerts, and analytics for BGT holders.</div>
-    </a>
-    <a class="trade-card" href="https://app.uniswap.org/explore/tokens/base/0xEbd4032C4dba07A8A58B9C783d90c6A41051d741" target="_blank">
-      <div class="trade-icon">🔵</div>
-      <div class="trade-name">Base (Uniswap)</div>
-      <div class="trade-desc">Trade BGT on Base via Uniswap. Low fees, Coinbase ecosystem.</div>
-    </a>
-    <a class="trade-card" href="https://pancakeswap.finance/swap?outputCurrency=0xEbd4032C4dba07A8A58B9C783d90c6A41051d741&chain=bsc" target="_blank">
-      <div class="trade-icon">🟡</div>
-      <div class="trade-name">PancakeSwap (BNB)</div>
-      <div class="trade-desc">Trade BGT on BNB Chain via PancakeSwap. Massive retail reach.</div>
-    </a>
-  </div>
-</div>
-
-<!-- TOKENOMICS -->
-<div class="section" id="tokenomics">
-  <div class="section-label">Tokenomics</div>
-  <h2>Simple. Fixed. Transparent.</h2>
-  <p class="desc">BGT has a hard-capped supply of 1,000,000,000 tokens. No minting after launch. No team unlock schedule to dump on you. Every token is accounted for.</p>
-
-  <div class="alloc-grid">
-    <div class="alloc-row">
-      <div class="alloc-top">
-        <span class="alloc-name">🛍️ User Rewards Pool</span>
-        <span class="alloc-pct">60%</span>
+  <main>
+    <div class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Wallet-gated rewards</div>
+        <h1>Unlock the <span class="grad">Crypto Rewards Layer</span> of Bag Guy</h1>
+        <p>Connect a Solana wallet to access optional NFT membership benefits, BAG rewards, treasury transparency, and enhanced shopping rewards. The shopper app works normally without a wallet.</p>
+        <div class="actions">
+          <button class="primary" data-connect>Connect Wallet</button>
+          <a class="secondary" href="#flow">Learn How Rewards Work</a>
+          <a class="secondary" href="/crypto/whitepaper/">Read White Paper</a>
+        </div>
       </div>
-      <div class="alloc-bar-bg"><div class="alloc-bar" style="width:60%"></div></div>
-      <div class="alloc-note">Distributed to users who scan groceries and earn BGT in the app. Released gradually over time.</div>
-    </div>
-    <div class="alloc-row">
-      <div class="alloc-top">
-        <span class="alloc-name">🏦 Treasury</span>
-        <span class="alloc-pct">25%</span>
+      <div class="visual" aria-label="Bag Guy crypto rewards dashboard preview">
+        <div class="wallet-card">
+          <div class="wallet-top">
+            <div class="bag-icon">B</div>
+            <div class="wallet-chip">Digital Pass</div>
+          </div>
+          <div>
+            <h2>Large Bag<br/><span class="grad">Membership</span></h2>
+            <div class="metric-row">
+              <div class="metric"><b>3x</b><span>Rewards</span></div>
+              <div class="metric"><b>BAG</b><span>Reserve</span></div>
+              <div class="metric"><b>NFT</b><span>Badge</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="alloc-bar-bg"><div class="alloc-bar" style="width:25%"></div></div>
-      <div class="alloc-note">Held in the Phantom treasury wallet for buybacks, partnerships, and ecosystem growth.</div>
     </div>
-    <div class="alloc-row">
-      <div class="alloc-top">
-        <span class="alloc-name">💧 Liquidity Pool</span>
-        <span class="alloc-pct">10%</span>
+
+    <section id="wallet">
+      <div class="section-head">
+        <h2>Connect a wallet</h2>
+        <p>Wallet access unlocks the optional Solana rewards layer. Shopper savings, coupons, Bag Points, and Store Credit still work without a wallet.</p>
       </div>
-      <div class="alloc-bar-bg"><div class="alloc-bar" style="width:10%"></div></div>
-      <div class="alloc-note">Locked in the BGT/SOL Raydium CPMM pool to ensure smooth trading for all users.</div>
-    </div>
-    <div class="alloc-row">
-      <div class="alloc-top">
-        <span class="alloc-name">🔥 Buyback &amp; Burn</span>
-        <span class="alloc-pct">5%</span>
+      <div class="panel">
+        <div class="wallet-options">
+          <button class="wallet-option" data-connect><strong>Phantom</strong><span>Primary Solana wallet connection placeholder.</span></button>
+          <button class="wallet-option" data-connect><strong>Solflare</strong><span>Solana wallet support placeholder.</span></button>
+          <button class="wallet-option" data-connect><strong>WalletConnect</strong><span>Ready for future Solana-compatible WalletConnect support.</span></button>
+        </div>
+        <div class="status" id="walletStatus">
+          <div>
+            <strong>Wallet status</strong>
+            <div class="address" id="walletAddress">Not connected</div>
+          </div>
+          <button class="secondary" id="disconnectBtn" hidden>Disconnect</button>
+        </div>
+        <p class="code-note">Future Solana hooks: <code>BAG_SPL_MINT</code>, <code>METAPLEX_MEMBERSHIP_COLLECTION</code>, <code>TREASURY_VAULTS</code>.</p>
       </div>
-      <div class="alloc-bar-bg"><div class="alloc-bar" style="width:5%"></div></div>
-      <div class="alloc-note">Revenue from app subscriptions is used to buy BGT on the open market and burn it. Deflationary by design.</div>
-    </div>
-  </div>
+    </section>
 
-  <!-- FLYWHEEL -->
-  <div class="flywheel">
-    <h3>📈 The BGT Flywheel</h3>
-    <p class="sub">More users → more scans → more BGT earned → more buy pressure → higher price → more users</p>
-    <div class="fw-steps">
-      <div class="fw-step"><div class="icon">👥</div><div class="lbl">Users scan groceries</div></div>
-      <div class="fw-arrow">→</div>
-      <div class="fw-step"><div class="icon">🪙</div><div class="lbl">Earn BGT rewards</div></div>
-      <div class="fw-arrow">→</div>
-      <div class="fw-step"><div class="icon">💸</div><div class="lbl">App revenue grows</div></div>
-      <div class="fw-arrow">→</div>
-      <div class="fw-step"><div class="icon">🔥</div><div class="lbl">BGT buyback &amp; burn</div></div>
-      <div class="fw-arrow">→</div>
-      <div class="fw-step"><div class="icon">📈</div><div class="lbl">Supply shrinks, price rises</div></div>
-    </div>
-  </div>
-</div>
+    <section id="tiers">
+      <div class="section-head">
+        <h2>NFT membership tiers</h2>
+        <p>Digital membership badges can unlock higher reward multipliers, coupon access, and future wallet-gated benefits.</p>
+      </div>
+      <div class="grid">
+        <article class="tier">
+          <div class="badge">F</div>
+          <h3>Free Bag</h3>
+          <ul>
+            <li>1x reward multiplier</li>
+            <li>Starter coupon access</li>
+            <li>Free NFT membership badge</li>
+          </ul>
+          <a class="secondary" href="#wallet">Connect to claim</a>
+        </article>
+        <article class="tier">
+          <div class="badge">S</div>
+          <h3>Small Bag</h3>
+          <ul>
+            <li>1.5x reward multiplier</li>
+            <li>Expanded coupon access</li>
+            <li>Small Bag NFT badge</li>
+          </ul>
+          <a class="secondary" href="#wallet">Upgrade tier</a>
+        </article>
+        <article class="tier">
+          <div class="badge">M</div>
+          <h3>Medium Bag</h3>
+          <ul>
+            <li>2x reward multiplier</li>
+            <li>Premium offer access</li>
+            <li>Medium Bag NFT badge</li>
+          </ul>
+          <a class="secondary" href="#wallet">Upgrade tier</a>
+        </article>
+        <article class="tier featured">
+          <div class="badge">L</div>
+          <h3>Large Bag</h3>
+          <ul>
+            <li>3x reward multiplier</li>
+            <li>Concierge coupon access</li>
+            <li>Large Bag NFT badge</li>
+          </ul>
+          <a class="secondary" href="#wallet">Upgrade tier</a>
+        </article>
+      </div>
+    </section>
 
-<!-- UTILITY -->
-<div class="section" id="utility">
-  <div class="section-label">Token Utility</div>
-  <h2>BGT Has Real Use Cases</h2>
-  <p class="desc">BGT isn't just a memecoin — it's the fuel of the Bag Guy ecosystem. Every feature below is live or in active development.</p>
-  <div class="utility-grid">
-    <div class="util-card">
-      <div class="util-icon">🛍️</div>
-      <div class="util-title">Earn by Shopping</div>
-      <div class="util-desc">Every grocery barcode scan earns BGT automatically. No wallet required to start — connect later to claim.</div>
-    </div>
-    <div class="util-card">
-      <div class="util-icon">💵</div>
-      <div class="util-title">Redeem for Cash Back</div>
-      <div class="util-desc">Convert BGT into USD credits inside the app. Use credits to offset your next grocery purchase.</div>
-    </div>
-    <div class="util-card">
-      <div class="util-icon">👑</div>
-      <div class="util-title">Tier Unlocks</div>
-      <div class="util-desc">Hold BGT to unlock VIP tiers — Silver, Gold, and Platinum — each with a higher Savings Stars multiplier.</div>
-    </div>
-    <div class="util-card">
-      <div class="util-icon">🗳️</div>
-      <div class="util-title">Governance</div>
-      <div class="util-desc">BGT holders vote on new features, coupon partners, and ecosystem proposals. Coming Q3 2026.</div>
-    </div>
-    <div class="util-card">
-      <div class="util-icon">🔥</div>
-      <div class="util-title">Deflationary Burns</div>
-      <div class="util-desc">A portion of every subscription payment is used to buy BGT on Raydium and permanently burn it.</div>
-    </div>
-    <div class="util-card">
-      <div class="util-icon">🤝</div>
-      <div class="util-title">Partner Rewards</div>
-      <div class="util-desc">Grocery chains and CPG brands can reward Bag Guy users in BGT directly — integrations launching 2026.</div>
-    </div>
-  </div>
-</div>
+    <section id="utility">
+      <div class="section-head">
+        <h2>BAG token utility</h2>
+        <p>BAG is designed as a fixed-supply SPL utility token around shopping activity, membership utility, and transparent treasury mechanics.</p>
+      </div>
+      <div class="utility">
+        <article class="util-card"><h3>Premium rewards</h3><p>BAG powers enhanced rewards for wallet-connected members who qualify through shopping activity.</p></article>
+        <article class="util-card"><h3>Treasury support</h3><p>Subscription revenue can support treasury reserves, reward pools, and ecosystem operations.</p></article>
+        <article class="util-card"><h3>Buyback utility</h3><p>Treasury mechanics can simulate and later support buyback and burn programs only after legal, security, and liquidity approvals.</p></article>
+        <article class="util-card"><h3>Shopping activity</h3><p>Users can earn rewards through scans, offers, purchases, meal planning, and verified engagement.</p></article>
+      </div>
+    </section>
 
-<!-- CONTRACT INFO -->
-<div class="section">
-  <div class="section-label">Contract Info</div>
-  <h2>BGT is Multi-Chain — Verify On-Chain</h2>
-  <p class="desc">BGT is deployed on Solana, Base, and BNB Chain. Same token, same supply, same utility across three networks. Fully transparent and verifiable.</p>
+    <section id="flow">
+      <div class="section-head">
+        <h2>Rewards flow</h2>
+        <p>The shopper app stays simple. Wallet-connected users can optionally access deeper rewards on the web.</p>
+      </div>
+      <div class="flow">
+        <article class="flow-step"><h3>Shop</h3><p>Buy groceries and everyday essentials through normal Bag Guy savings flows.</p></article>
+        <article class="flow-step"><h3>Scan</h3><p>Scan products, receipts, or checkout codes to match eligible offers.</p></article>
+        <article class="flow-step"><h3>Earn Bag Points</h3><p>Shopping actions earn shopper rewards and progress toward Store Credit.</p></article>
+        <article class="flow-step"><h3>Optional crypto rewards</h3><p>Connected wallets may qualify for BAG and NFT benefits when available.</p></article>
+      </div>
+    </section>
 
-  <div class="contract-box">
-    <div class="contract-chain">🟣 Solana Mainnet — SPL Token</div>
-    <div class="contract-addr">
-      Mint: <a href="https://solscan.io/token/5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W ↗</a>
-    </div>
-  </div>
-  <div class="contract-box">
-    <div class="contract-chain">🔵 Base (Coinbase L2) — ERC-20</div>
-    <div class="contract-addr">
-      Contract: <a href="https://basescan.org/token/0xEbd4032C4dba07A8A58B9C783d90c6A41051d741" target="_blank">0xEbd4032C4dba07A8A58B9C783d90c6A41051d741 ↗</a>
-    </div>
-  </div>
-  <div class="contract-box">
-    <div class="contract-chain">🟡 BNB Chain — BEP-20</div>
-    <div class="contract-addr">
-      Contract: <a href="https://bscscan.com/token/0xEbd4032C4dba07A8A58B9C783d90c6A41051d741" target="_blank">0xEbd4032C4dba07A8A58B9C783d90c6A41051d741 ↗</a>
-    </div>
-  </div>
-  <div class="contract-box">
-    <div class="contract-chain">💧 Raydium CPMM Pool — BGT/SOL</div>
-    <div class="contract-addr">
-      Pool ID: <a href="https://raydium.io/liquidity/increase/?mode=add&pool_id=7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY ↗</a>
-    </div>
-  </div>
-  <div class="contract-box">
-    <div class="contract-chain">🏦 Treasury — Solana</div>
-    <div class="contract-addr">
-      <a href="https://solscan.io/account/4zEyMhnPCtFYCyDUs4DPvNd5UREnzvVK7HxQgRDaHy8S" target="_blank">4zEyMhnPCtFYCyDUs4DPvNd5UREnzvVK7HxQgRDaHy8S ↗</a>
-    </div>
-  </div>
-  <div class="contract-box">
-    <div class="contract-chain">🏦 Treasury — Base + BNB (EVM)</div>
-    <div class="contract-addr">
-      <a href="https://basescan.org/address/0x549070b2c09642C4C3A5d1Da08C214579E5CC242" target="_blank">0x549070b2c09642C4C3A5d1Da08C214579E5CC242 ↗</a>
-    </div>
-  </div>
-</div>
+    <section>
+      <div class="disclaimer">
+        Bag Guy rewards are designed for shopping utility. BAG tokens and NFT memberships are not investment products. Rewards, availability, and token features may vary by jurisdiction and platform rules. Review the <a href="/crypto/whitepaper/">BAG white paper</a> for the pre-deployment architecture.
+      </div>
+    </section>
+  </main>
 
-<!-- FOOTER -->
-<footer>
-  <a class="footer-logo" href="/">🛍️ Bag Guy</a>
-  <p style="margin-bottom:14px">
-    <a href="/">Home</a>
-    <a href="https://jup.ag/swap/SOL-5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">Buy BGT</a>
-    <a href="https://solscan.io/token/5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W" target="_blank">Solscan</a>
-    <a href="https://www.dexscreener.com/solana/7yX6uP3vgFcFFn9onayhirn7Qvhb3Js8LiEHogjDnYnY" target="_blank">DEX Screener</a>
-    <a href="mailto:hello@bagguyapp.com">Contact</a>
-  </p>
-  <p>© 2026 Bag Guy. BGT is a utility token. Not financial advice. Always DYOR.</p>
-</footer>
+  <footer>
+    <strong>Bag Guy Crypto Rewards Layer</strong><br/>
+    <span>Web-only wallet experience. Shopper app functionality does not require crypto access.</span><br/>
+    <a href="/privacy">Privacy</a> · <a href="/support">Support</a> · <a href="/crypto/whitepaper/">White Paper</a> · <a href="/">Back to Bag Guy</a>
+  </footer>
 
-<script>
-function copyMint() {
-  const addr = '5EguQYitVgoC2ZdSbZFXRvNk9JhTkacN2fXDPQgBKE1W';
-  navigator.clipboard.writeText(addr).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✅ Copied!';
-    btn.style.color = '#14F195';
-    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
-  }).catch(() => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = addr; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta);
-    document.getElementById('copyBtn').textContent = '✅ Copied!';
-    setTimeout(() => { document.getElementById('copyBtn').textContent = 'Copy'; }, 2000);
-  });
-}
-</script>
+  <script>
+    const walletAddress = document.getElementById('walletAddress');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const connectButtons = document.querySelectorAll('[data-connect]');
 
+    const shortAddress = (address) => `${address.slice(0, 6)}...${address.slice(-4)}`;
+
+    async function connectWallet() {
+      if (window.ethereum && window.ethereum.request) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (accounts && accounts[0]) {
+            walletAddress.textContent = shortAddress(accounts[0]);
+            disconnectBtn.hidden = false;
+            return;
+          }
+        } catch (error) {
+          walletAddress.textContent = 'Connection cancelled';
+          return;
+        }
+      }
+      const demo = '0xCAc708F7c468719d77De2E06e5124edb20Fcb8C3';
+      walletAddress.textContent = `${shortAddress(demo)} (demo)`;
+      disconnectBtn.hidden = false;
+    }
+
+    connectButtons.forEach((button) => button.addEventListener('click', connectWallet));
+    disconnectBtn.addEventListener('click', () => {
+      walletAddress.textContent = 'Not connected';
+      disconnectBtn.hidden = true;
+    });
+  </script>
 </body>
 </html>
