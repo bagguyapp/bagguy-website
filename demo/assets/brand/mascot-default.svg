@@ -1,6 +1,28 @@
-<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-<rect x="50" y="80" width="200" height="160" rx="20" fill="#22C55E"/>
-<circle cx="120" cy="150" r="10" fill="#0F172A"/>
-<circle cx="180" cy="150" r="10" fill="#0F172A"/>
-<path d="M120 190 Q150 210 180 190" stroke="#0F172A" stroke-width="4" fill="none"/>
+<svg width="360" height="420" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bag" x1="74" y1="98" x2="286" y2="342" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFFFF6"/>
+      <stop offset=".46" stop-color="#66EFA6"/>
+      <stop offset="1" stop-color="#0AAE63"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="246" y1="62" x2="305" y2="132" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF1A8"/>
+      <stop offset=".55" stop-color="#D5A427"/>
+      <stop offset="1" stop-color="#8C6810"/>
+    </linearGradient>
+    <filter id="shadow" x="30" y="58" width="300" height="342" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#061512" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <ellipse cx="180" cy="372" rx="112" ry="24" fill="#071D15" opacity=".12"/>
+  <g filter="url(#shadow)">
+    <path d="M79 160C84 128 111 104 144 104H216C249 104 276 128 281 160L309 326C315 364 286 398 248 398H112C74 398 45 364 51 326L79 160Z" fill="url(#bag)" stroke="#F7FFF9" stroke-width="14" stroke-linejoin="round"/>
+    <path d="M120 116V93C120 58 147 30 180 30C213 30 240 58 240 93V116" stroke="#071D15" stroke-width="15" stroke-linecap="round" opacity=".28"/>
+    <path d="M120 112V92C120 57 147 30 180 30C213 30 240 57 240 92V112" stroke="#F7FFF9" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="138" cy="215" r="13" fill="#071D15"/>
+    <circle cx="222" cy="215" r="13" fill="#071D15"/>
+    <path d="M137 270C152 288 168 297 180 297C192 297 208 288 223 270" stroke="#071D15" stroke-width="12" stroke-linecap="round"/>
+    <path d="M124 323L159 358L236 269" stroke="#071D15" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="276" cy="94" r="35" fill="url(#gold)" stroke="#FFF6C8" stroke-width="8"/>
+  </g>
 </svg>
