@@ -88,6 +88,10 @@
     .section-head h2{font-size:clamp(2rem,4.4vw,3.65rem);line-height:.96;letter-spacing:-.055em;max-width:690px}
     .section-head p{max-width:560px;color:var(--muted)}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .app-map{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .app-tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 26px rgba(16,54,36,.045);min-height:124px}
+    .app-tile b{display:block;font-size:.98rem;margin-bottom:7px;color:var(--ink)}
+    .app-tile span{display:block;color:var(--muted);font-size:.84rem;line-height:1.4}
     .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 12px 34px rgba(16,54,36,.06);transition:transform .16s,border-color .16s}
     .card:hover{transform:translateY(-3px);border-color:#b8dac8}
     .icon{width:48px;height:48px;border-radius:16px;background:var(--soft);display:grid;place-items:center;margin-bottom:16px;color:var(--green);font-weight:950}
@@ -126,8 +130,8 @@
     .cta p{color:rgba(255,255,255,.84);max-width:620px}
     footer{border-top:1px solid var(--line);padding:34px 22px;text-align:center;color:var(--muted);font-size:.9rem;background:#fff}
     footer a{color:var(--green-dark);font-weight:850;text-decoration:none;margin:0 8px}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-visual{min-height:auto}.float-card{position:relative;left:auto;right:auto;top:auto;bottom:auto;margin-top:12px;width:auto}.phone{margin:0 auto}.proof,.grid{grid-template-columns:1fr 1fr}.journey,.compare,.cta-inner{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:12px}}
-    @media(max-width:640px){nav{align-items:flex-start}.navlinks{gap:10px}.navlinks a{font-size:.84rem}.hero{padding-top:44px}.proof,.grid,.dash-grid{grid-template-columns:1fr}.phone{border-radius:28px}.screen{min-height:auto}.quick-row{grid-template-columns:1fr 1fr}.deal-card{grid-template-columns:46px minmax(0,1fr)}.save-badge{grid-column:2;justify-self:start}.dark-inner,section{padding-top:54px;padding-bottom:54px}}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-visual{min-height:auto}.float-card{position:relative;left:auto;right:auto;top:auto;bottom:auto;margin-top:12px;width:auto}.phone{margin:0 auto}.proof,.grid,.app-map{grid-template-columns:1fr 1fr}.journey,.compare,.cta-inner{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:12px}}
+    @media(max-width:640px){nav{align-items:flex-start}.navlinks{gap:10px}.navlinks a{font-size:.84rem}.hero{padding-top:44px}.proof,.grid,.app-map,.dash-grid{grid-template-columns:1fr}.phone{border-radius:28px}.screen{min-height:auto}.quick-row{grid-template-columns:1fr 1fr}.deal-card{grid-template-columns:46px minmax(0,1fr)}.save-badge{grid-column:2;justify-self:start}.dark-inner,section{padding-top:54px;padding-bottom:54px}}
   </style>
 </head>
 <body>
@@ -215,7 +219,7 @@
 
       <div class="proof">
         <div class="proof-card"><b>1 scan</b><span>checkout code, products, or receipts</span></div>
-        <div class="proof-card"><b>5 flows</b><span>deals, rewards, lists, meals, sharing</span></div>
+        <div class="proof-card"><b>10+ screens</b><span>home, scan, deals, rewards, meals, lists</span></div>
         <div class="proof-card"><b>4 tiers</b><span>Free, Small, Medium, Large Bag</span></div>
         <div class="proof-card"><b>0 crypto</b><span>required for regular shoppers</span></div>
       </div>
@@ -236,6 +240,28 @@
         <article class="card"><div class="icon">04</div><h3>AI Meal Planner</h3><p>Plan meals by budget, family size, cooking time, and local weekly ads. Add ingredients to your shopping list.</p></article>
         <article class="card"><div class="icon">05</div><h3>Shopping List</h3><p>Add items manually, shop recipes, match coupons, check off items, and scan at checkout.</p></article>
         <article class="card"><div class="icon">06</div><h3>Shopper Share</h3><p>Share lists, recipes, coupons, weekly deals, and budget baskets. Earn points when shared content helps others save.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What is in the app</div>
+          <h2>The landing page matches the real mobile product.</h2>
+        </div>
+        <p>Bag Guy is not positioned as a single coupon page. It is a complete shopping utility with scan, deals, rewards, planning, sharing, local context, and account controls.</p>
+      </div>
+      <div class="app-map">
+        <div class="app-tile"><b>Onboarding</b><span>Start saving instantly with location and privacy trust cues.</span></div>
+        <div class="app-tile"><b>Home</b><span>Savings dashboard with Bag Points, Store Credit, nearby deals, and quick actions.</span></div>
+        <div class="app-tile"><b>Scan</b><span>Checkout scan code, product scanner, receipt scan, matched savings, and reward history.</span></div>
+        <div class="app-tile"><b>Deals</b><span>Readable full-width offers, categories, manufacturer coupons, local deals, and eligibility text.</span></div>
+        <div class="app-tile"><b>Rewards</b><span>Bag Points balance, Store Credit value, milestones, activity, and redemption states.</span></div>
+        <div class="app-tile"><b>Membership</b><span>Free Bag, Small Bag, Medium Bag, and Large Bag upgrade paths.</span></div>
+        <div class="app-tile"><b>AI Meal Planner</b><span>Budget, family size, cooking time, recipe cards, matched deals, and shopping-list creation.</span></div>
+        <div class="app-tile"><b>Shopping List</b><span>Manual items, recipe ingredients, saved deals, weekly ads, totals, savings, and checkout CTA.</span></div>
+        <div class="app-tile"><b>Shopper Share</b><span>Shared lists, recipes, coupons, family groups, QR/link placeholders, and verified-use rewards.</span></div>
+        <div class="app-tile"><b>SNAP + Map + Account</b><span>SNAP-friendly deals, retailer map, privacy/support links, permissions, and account deletion.</span></div>
       </div>
     </section>
 
@@ -279,12 +305,12 @@
             <div class="section-kicker">Systems behind the app</div>
             <h2>Ready for real data, not just demo cards.</h2>
           </div>
-          <p>The current Bag Guy build includes backend-ready systems for product lookup, coupon matching, receipt rewards, provider onboarding, and Telegram work-bag automation.</p>
+          <p>The current Bag Guy build includes backend-ready systems for product lookup, coupon matching, receipt rewards, provider onboarding, recipe recommendations, and safe internal operations tooling.</p>
         </div>
         <div class="grid">
           <article class="card"><div class="icon">API</div><h3>Coupon connector architecture</h3><p>Built for Ibotta/IPN, Inmar, Eagle Eye, Kroger Products API, UPC lookup providers, retailer feeds, and admin-uploaded deals.</p></article>
           <article class="card"><div class="icon">OCR</div><h3>Receipt-safe reward flow</h3><p>The mobile app uses a stable receipt contract with receipt IDs, idempotent rewards, and clear backend-down messaging.</p></article>
-          <article class="card"><div class="icon">BOT</div><h3>Telegram agent stack</h3><p>GPT Bot Core packages work into approved bags, prepares Codex task files, and keeps shell execution disabled by default.</p></article>
+          <article class="card"><div class="icon">AI</div><h3>Recipe + product intelligence</h3><p>Recipe recommendations, product metadata, UPC matching, coupon confidence, and fallback data are structured for real provider integrations.</p></article>
         </div>
       </div>
     </div>
