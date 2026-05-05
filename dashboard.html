@@ -3,392 +3,470 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard — Bag Guy</title>
+  <title>Customer Dashboard - Bag Guy</title>
   <meta name="robots" content="noindex"/>
+  <meta name="description" content="View your Bag Guy rewards, receipt scans, Store Credit, and account activity."/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0d0d1a;--card:#13132a;--purple:#7c3aed;--pl:#a855f7;--green:#22c55e;--text:#f1f1f1;--muted:#8b8bab;--border:rgba(124,58,237,.18);--danger:#ef4444}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
-    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(13,13,26,.96);backdrop-filter:blur(12px);gap:16px;flex-wrap:wrap}
-    .logo{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    :root{
+      --ink:#102019;--ink2:#233a30;--muted:#66766f;--bg:#f5faf7;--card:#fff;
+      --line:#dce9e2;--green:#0aae63;--green2:#087246;--mint:#e3fbec;
+      --gold:#d5a427;--amber:#fff7dc;--red:#b42318;--shadow:0 18px 48px rgba(16,54,36,.10);
+    }
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:
+      radial-gradient(circle at 16% 0%,rgba(10,174,99,.12),transparent 30%),
+      linear-gradient(180deg,#fbfdfb,var(--bg));color:var(--ink);line-height:1.55;min-height:100vh}
+    a{color:inherit}
+    nav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:15px clamp(18px,5vw,56px);background:rgba(251,253,251,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(220,233,226,.9)}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:950}
+    .brand-mark{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#071d15,#0aae63 76%,#7cf2b0);display:grid;place-items:center;color:#fff;box-shadow:0 12px 26px rgba(10,174,99,.22)}
     .nav-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .nav-right a,.nav-right button{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
-    .nav-right a:hover,.nav-right button:hover{color:var(--text)}
-    .logout-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
-    .logout-btn:hover{border-color:var(--pl);color:var(--pl)}
-    main{max-width:1100px;margin:0 auto;padding:48px 24px}
-    header.page-header{margin-bottom:32px}
-    .eyebrow{color:var(--pl);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-    h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:900;line-height:1.15}
-    h1 span{background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .subtitle{color:var(--muted);margin-top:6px;font-size:.95rem}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:32px}
-    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
-    .stat-card .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-weight:700}
-    .stat-card .value{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:24px}
-    .panel h2{font-size:.85rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
-    pre{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted);max-height:280px;overflow:auto;font-family:'SF Mono',Menlo,monospace}
-    .msg{font-size:.9rem;padding:12px 14px;border-radius:10px;margin-top:16px;display:none}
-    .msg.error{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--danger)}
-    .loading{color:var(--muted);font-size:.9rem}
-    .toast-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-radius:12px;font-size:.9rem;font-weight:600;margin-bottom:20px;animation:slideDown .3s ease}
-    .toast-banner.success{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
-    .toast-banner.warning{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#fbbf24}
-    .toast-banner .close-toast{background:none;border:none;color:inherit;font-size:1.2rem;cursor:pointer;padding:0 4px;opacity:.7;font-family:inherit}
-    .toast-banner .close-toast:hover{opacity:1}
-    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-    .btn-manage{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:12px;text-decoration:none}
-    .btn-manage:hover{border-color:var(--pl);color:var(--pl)}
-    .btn-manage:disabled{opacity:.5;cursor:not-allowed}
-    .scan-section{margin-top:24px}
-    .scan-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit}
-    .scan-btn:hover{opacity:.88}
-    .scan-btn:disabled{opacity:.5;cursor:not-allowed}
-    .scan-btn svg{flex-shrink:0}
-    .scan-status{margin-top:14px;font-size:.88rem;color:var(--muted)}
-    .scan-results{margin-top:18px;display:none}
-    .scan-results.visible{display:block}
-    .scan-results h3{font-size:.82rem;font-weight:700;color:var(--pl);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-    .scan-summary{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap}
-    .scan-summary .pill{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);padding:8px 16px;border-radius:10px;font-size:.85rem;font-weight:700}
-    .matched-items{list-style:none;padding:0}
-    .matched-items li{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:.88rem}
-    .matched-items .item-name{font-weight:600;color:var(--text)}
-    .matched-items .item-saving{color:var(--green);font-weight:800}
-    .receipts-table{width:100%;border-collapse:collapse;font-size:.88rem}
-    .receipts-table th{text-align:left;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 14px;border-bottom:1px solid var(--border)}
-    .receipts-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
-    .receipts-table tr:last-child td{border-bottom:none}
-    .receipts-table tbody tr:hover{background:rgba(124,58,237,.06)}
-    .receipts-table .td-date{color:var(--muted);white-space:nowrap}
-    .receipts-table .td-store{font-weight:600}
-    .receipts-table .td-items{color:var(--muted)}
-    .receipts-table .td-savings{color:var(--green);font-weight:800;white-space:nowrap}
-    .receipts-table .td-status{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-    .status-done{color:var(--green)}
-    .status-pending{color:var(--pl)}
-    .status-failed{color:var(--danger)}
-    .empty-state{color:var(--muted);font-size:.9rem;padding:20px 0;text-align:center}
-    @media(max-width:640px){.receipts-table th:nth-child(4),.receipts-table td:nth-child(4){display:none}}
-    footer{padding:38px 24px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid rgba(255,255,255,.06);margin-top:60px}
-    footer a{color:var(--muted);text-decoration:none;margin:0 10px}
+    .nav-right a,.nav-right button{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:850;background:none;border:0;cursor:pointer;font-family:inherit}
+    .nav-right a.active{color:var(--green2)}
+    .nav-email{max-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-size:.84rem;font-weight:800}
+    .pill-btn{border:1px solid var(--line)!important;border-radius:999px!important;padding:9px 13px!important;background:#fff!important}
+    main{max-width:1180px;margin:0 auto;padding:42px 22px 76px}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:22px;align-items:stretch}
+    .hero-card{background:linear-gradient(135deg,#071d15,#0aae63);color:#fff;border-radius:32px;padding:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:330px}
+    .hero-card::after{content:"";position:absolute;right:-100px;bottom:-120px;width:330px;height:330px;border-radius:999px;background:rgba(255,255,255,.12)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.11);border-radius:999px;padding:8px 12px;font-size:.76rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+    h1{font-size:clamp(2.25rem,5vw,4.35rem);line-height:.98;letter-spacing:-.052em;margin-bottom:12px;max-width:800px}
+    .hero-copy{max-width:670px;color:rgba(255,255,255,.84);font-size:1.04rem}
+    .balance-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px;position:relative;z-index:1}
+    .balance{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:18px}
+    .balance span{display:block;font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.72)}
+    .balance b{display:block;font-size:clamp(2rem,5vw,3.25rem);line-height:1;margin-top:7px}
+    .side-card,.panel,.stat{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+    .side-card{border-radius:32px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;gap:22px}
+    .progress-head{display:flex;justify-content:space-between;gap:14px;align-items:start;margin-bottom:14px}
+    .section-kicker{color:var(--green2);font-weight:950;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase}
+    .progress-title{font-size:1.35rem;font-weight:950;letter-spacing:-.03em;margin-top:7px}
+    .tier-chip{background:var(--mint);color:var(--green2);border:1px solid #bceecf;border-radius:999px;padding:7px 10px;font-size:.78rem;font-weight:950;white-space:nowrap}
+    .bar{height:12px;background:#e5eee9;border-radius:999px;overflow:hidden}
+    .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#72e7a8);border-radius:999px;transition:width .5s ease}
+    .small{color:var(--muted);font-size:.9rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border:0;min-height:48px;border-radius:15px;padding:13px 18px;font-weight:950;text-decoration:none;cursor:pointer;font-family:inherit;transition:transform .15s,opacity .15s}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--green);color:#fff;box-shadow:0 14px 30px rgba(10,174,99,.22)}
+    .btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+    .btn:disabled{opacity:.56;cursor:not-allowed}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+    .stat{border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(16,54,36,.045)}
+    .stat span{display:block;color:var(--muted);font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+    .stat b{display:block;font-size:1.42rem;margin-top:5px;letter-spacing:-.02em}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:22px}
+    .panel{border-radius:26px;padding:24px;box-shadow:0 10px 30px rgba(16,54,36,.055)}
+    .panel-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:18px}
+    .panel h2{font-size:1.16rem;letter-spacing:-.02em}
+    .activity,.boosters{display:grid;gap:10px}
+    .activity-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:13px;background:#fbfdfb}
+    .activity-icon{width:44px;height:44px;border-radius:15px;background:var(--mint);display:grid;place-items:center;color:var(--green2);font-weight:950;font-size:.75rem}
+    .activity-title{font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .activity-detail{color:var(--muted);font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .points{font-weight:950;color:var(--green2);white-space:nowrap}
+    .points.negative{color:var(--red)}
+    .booster{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fbfdfb}
+    .booster b{display:block;margin-bottom:4px}
+    .booster span{display:block;color:var(--muted);font-size:.88rem}
+    .notice{display:none;border-radius:18px;padding:15px 16px;margin-top:16px;font-weight:800;font-size:.9rem}
+    .notice.ok{display:block;background:#e9fbef;border:1px solid #bceecf;color:var(--green2)}
+    .notice.warn{display:block;background:#fff5d7;border:1px solid #efd481;color:#7a5a0c}
+    .notice.error{display:block;background:#fff0ef;border:1px solid #f0b7b2;color:var(--red)}
+    .empty{border:1px dashed #cbded3;background:#fbfdfb;border-radius:18px;padding:26px;text-align:center;color:var(--muted)}
+    .scan-box{display:grid;gap:12px}
+    .file-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+    .scan-result{display:none;border:1px solid #bceecf;background:#e9fbef;color:var(--green2);border-radius:18px;padding:16px;margin-top:14px}
+    .scan-result.visible{display:block}
+    .receipt-table{width:100%;border-collapse:collapse;font-size:.88rem}
+    .receipt-table th{text-align:left;color:var(--muted);font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px;border-bottom:1px solid var(--line)}
+    .receipt-table td{padding:12px;border-bottom:1px solid rgba(16,32,25,.06);vertical-align:middle}
+    .receipt-table tr:last-child td{border-bottom:0}
+    .td-store{font-weight:950}.td-date,.td-items{color:var(--muted)}.td-savings{color:var(--green2);font-weight:950;white-space:nowrap}
+    .account-line{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(16,32,25,.07);padding:12px 0}
+    .account-line:last-child{border-bottom:0}.account-line span{color:var(--muted)}.account-line b{text-align:right}
+    footer{padding:32px 22px;text-align:center;color:var(--muted);font-size:.86rem;border-top:1px solid var(--line);background:#fff}
+    footer a{color:var(--green2);font-weight:850;text-decoration:none;margin:0 8px}
+    @media(max-width:940px){.hero,.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){nav{align-items:flex-start}.balance-row,.stats{grid-template-columns:1fr}.activity-row{grid-template-columns:40px minmax(0,1fr)}.points{grid-column:2;justify-self:start}.hero-card,.side-card,.panel{border-radius:22px;padding:20px}.receipt-table th:nth-child(3),.receipt-table td:nth-child(3){display:none}}
   </style>
 </head>
 <body>
-
 <nav>
-  <a class="logo" href="/">🛍️ Bag Guy</a>
+  <a class="brand" href="/"><span class="brand-mark">BG</span><span>Bag Guy</span></a>
   <div class="nav-right">
-    <span id="navEmail" style="color:var(--muted);font-size:.82rem"></span>
+    <span class="nav-email" id="navEmail"></span>
+    <a class="active" href="/dashboard.html">Dashboard</a>
     <a href="/rewards.html">Rewards</a>
-    <button class="logout-btn" id="logoutBtn">Log out</button>
+    <button class="pill-btn" id="logoutBtn">Log out</button>
   </div>
 </nav>
 
 <main>
-  <header class="page-header">
-    <div class="eyebrow">Dashboard</div>
-    <h1>Welcome <span id="hello">back</span></h1>
-    <p class="subtitle">Your savings and activity at a glance.</p>
-  </header>
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">Customer dashboard</div>
+      <h1>Welcome back, <span id="hello">shopper</span>.</h1>
+      <p class="hero-copy">Your Bag Points, Store Credit, receipt scans, saved deals, and recent rewards are all reflected here when you are signed in.</p>
+      <div class="balance-row">
+        <div class="balance"><span>Bag Points</span><b id="pointsBalance">-</b></div>
+        <div class="balance"><span>Store Credit</span><b id="storeCredit">$-</b></div>
+      </div>
+    </div>
 
-  <div id="toastContainer"></div>
-  <div id="errMsg" class="msg"></div>
+    <aside class="side-card">
+      <div>
+        <div class="progress-head">
+          <div>
+            <div class="section-kicker">Next reward</div>
+            <div class="progress-title" id="progressTitle">Loading reward progress...</div>
+          </div>
+          <div class="tier-chip" id="tierChip">Free Bag</div>
+        </div>
+        <div class="bar"><span id="progressBar"></span></div>
+        <p class="small" id="progressCopy" style="margin-top:10px">Checking your latest Bag Guy rewards.</p>
+        <div id="dashboardNotice" class="notice"></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="scanShortcut">Scan Receipt</button>
+        <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
+      </div>
+    </aside>
+  </section>
 
-  <div class="stats-grid" id="statsGrid">
-    <div class="stat-card"><div class="label">Users</div><div class="value" id="statUsers">—</div></div>
-    <div class="stat-card"><div class="label">Receipts Scanned</div><div class="value" id="statReceipts">—</div></div>
-    <div class="stat-card"><div class="label">Total Savings</div><div class="value" id="statSavings">—</div></div>
+  <div class="stats">
+    <div class="stat"><span>This week</span><b id="weeklyPoints">- pts</b></div>
+    <div class="stat"><span>Recent rewards</span><b id="activityCount">-</b></div>
+    <div class="stat"><span>Receipts</span><b id="receiptCount">-</b></div>
+    <div class="stat"><span>Updated</span><b id="updatedAt">-</b></div>
   </div>
 
-  <section class="panel scan-section">
-    <h2>Scan a Receipt</h2>
-    <input type="file" id="receiptInput" accept="image/*" hidden/>
-    <button class="scan-btn" id="scanBtn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      Scan a receipt
-    </button>
-    <div class="scan-status" id="scanStatus"></div>
-    <div class="scan-results" id="scanResults">
-      <h3>Matched Items</h3>
-      <div class="scan-summary" id="scanSummary"></div>
-      <ul class="matched-items" id="matchedItems"></ul>
+  <section class="grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="section-kicker">Rewards</div>
+          <h2>Recent rewards history</h2>
+        </div>
+        <a class="btn btn-secondary" href="/how-to/">How to use</a>
+      </div>
+      <div id="activityList" class="activity">
+        <div class="empty">Loading your rewards...</div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="section-kicker">Account</div>
+      <h2 style="margin-bottom:16px">Your Bag Guy account</h2>
+      <div id="accountSummary">
+        <div class="account-line"><span>Email</span><b>-</b></div>
+        <div class="account-line"><span>Plan</span><b>-</b></div>
+        <div class="account-line"><span>Member since</span><b>-</b></div>
+      </div>
+      <button class="btn btn-secondary" id="manageSubBtn" style="display:none;margin-top:18px">Manage Subscription</button>
+    </aside>
+  </section>
+
+  <section class="grid">
+    <div class="panel" id="scanPanel">
+      <div class="panel-head">
+        <div>
+          <div class="section-kicker">Scan</div>
+          <h2>Scan a receipt</h2>
+        </div>
+      </div>
+      <div class="scan-box">
+        <p class="small">Upload a receipt image to find eligible savings and refresh your reward balance.</p>
+        <input class="file-input" type="file" id="receiptInput" accept="image/*"/>
+        <button class="btn btn-primary" id="scanBtn">Choose Receipt</button>
+        <div id="scanStatus" class="small"></div>
+        <div id="scanResult" class="scan-result"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="section-kicker">Receipts</div>
+          <h2>Recent receipt scans</h2>
+        </div>
+      </div>
+      <div id="receiptsBody"><div class="empty">Loading receipt history...</div></div>
     </div>
   </section>
 
   <section class="panel">
-    <h2>Recent Receipts</h2>
-    <div id="receiptsBody"><p class="loading">Loading…</p></div>
-  </section>
-
-  <section class="panel">
-    <h2>Account</h2>
-    <pre id="accountPanel" class="loading">Loading…</pre>
-    <button class="btn-manage" id="manageSubBtn" style="display:none">Manage Subscription</button>
-  </section>
-
-  <section class="panel">
-    <h2>Raw stats payload</h2>
-    <pre id="rawPanel" class="loading">Loading…</pre>
+    <div class="section-kicker">Ways to earn</div>
+    <h2 style="margin-bottom:16px">Keep rewards moving</h2>
+    <div class="boosters">
+      <div class="booster"><b>Scan receipts</b><span>Receipt scans can add Bag Points after eligible offers are processed.</span></div>
+      <div class="booster"><b>Save offers</b><span>Clip local deals, weekly ads, and manufacturer coupons when available.</span></div>
+      <div class="booster"><b>Plan meals</b><span>Shop recipes based on budget, family size, and matched savings.</span></div>
+      <div class="booster"><b>Share lists</b><span>Earn rewards when shared lists, recipes, or deals help others save after verified use.</span></div>
+    </div>
   </section>
 </main>
 
 <footer>
-  <p>
-    <a href="mailto:hello@bagguyapp.com">Contact</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/terms">Terms</a>
-  </p>
+  <strong>Bag Guy</strong><br/>
+  <a href="/">Home</a>
+  <a href="/support/">Support</a>
+  <a href="/privacy/">Privacy</a>
 </footer>
 
 <script src="/assets/auth.js"></script>
 <script>
 (() => {
-  if (!BagGuyAuth.isLoggedIn()) { location.href = '/login.html'; return; }
+  if (!BagGuyAuth.isLoggedIn()) { location.href = '/login.html?next=/dashboard.html'; return; }
 
-  const errMsg = document.getElementById('errMsg');
-  function showError(text){ errMsg.textContent = text; errMsg.className = 'msg error'; }
+  const els = {
+    navEmail: document.getElementById('navEmail'),
+    hello: document.getElementById('hello'),
+    points: document.getElementById('pointsBalance'),
+    credit: document.getElementById('storeCredit'),
+    progressTitle: document.getElementById('progressTitle'),
+    progressCopy: document.getElementById('progressCopy'),
+    progressBar: document.getElementById('progressBar'),
+    tierChip: document.getElementById('tierChip'),
+    weeklyPoints: document.getElementById('weeklyPoints'),
+    activityCount: document.getElementById('activityCount'),
+    updatedAt: document.getElementById('updatedAt'),
+    receiptCount: document.getElementById('receiptCount'),
+    activityList: document.getElementById('activityList'),
+    notice: document.getElementById('dashboardNotice'),
+    refresh: document.getElementById('refreshBtn'),
+    logout: document.getElementById('logoutBtn'),
+    account: document.getElementById('accountSummary'),
+    manage: document.getElementById('manageSubBtn'),
+    scanShortcut: document.getElementById('scanShortcut'),
+    scanBtn: document.getElementById('scanBtn'),
+    receiptInput: document.getElementById('receiptInput'),
+    scanStatus: document.getElementById('scanStatus'),
+    scanResult: document.getElementById('scanResult'),
+    receiptsBody: document.getElementById('receiptsBody'),
+  };
 
-  /* ── Payment toast banners ── */
-  const params = new URLSearchParams(window.location.search);
-  const toastContainer = document.getElementById('toastContainer');
+  const fmtMoney = (cents) => '$' + ((Number(cents || 0)) / 100).toFixed(2);
+  const fmtDate = (raw) => {
+    if (!raw) return 'Recently';
+    const d = new Date(raw);
+    if (Number.isNaN(d.getTime())) return 'Recently';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  };
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+  const iconFor = (type) => ({ scan:'SCAN', receipt:'REC', 'deal-save':'DEAL', share:'SHR', list:'LIST', redemption:'$' }[type] || 'BG');
+  const tierFor = (points) => points >= 2500 ? 'Large Bag' : points >= 1000 ? 'Medium Bag' : points >= 500 ? 'Small Bag' : 'Free Bag';
+  const nextMilestone = (points) => {
+    const milestones = [500, 1000, 2500, 5000];
+    return milestones.find((m) => points < m) || Math.ceil((points + 1) / 1000) * 1000;
+  };
+  const showNotice = (tone, text) => {
+    els.notice.className = 'notice ' + tone;
+    els.notice.textContent = text;
+  };
 
-  function showToast(type, message) {
-    const div = document.createElement('div');
-    div.className = 'toast-banner ' + type;
-    div.innerHTML = '<span>' + message + '</span><button class="close-toast" aria-label="Close">&times;</button>';
-    div.querySelector('.close-toast').addEventListener('click', function() { div.remove(); });
-    toastContainer.appendChild(div);
-    return div;
-  }
+  let currentUser = BagGuyAuth.getUser() || null;
 
-  if (params.get('paid') === '1') {
-    const toast = showToast('success', '🎉 Welcome to your premium plan! Your subscription is active.');
-    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 8000);
-    // Refresh /auth/me to update displayed plan
-    fetch(BagGuyAuth.API + '/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
-    }).then(r => r.json()).then(me => {
-      document.getElementById('accountPanel').textContent = JSON.stringify(me, null, 2);
-      document.getElementById('accountPanel').classList.remove('loading');
-    }).catch(function(){});
-    // Clean URL
-    history.replaceState(null, '', '/dashboard.html');
-  } else if (params.get('paid') === '0') {
-    showToast('warning', 'Payment cancelled — try again anytime from the Pricing page on the homepage.');
-    history.replaceState(null, '', '/dashboard.html');
-  }
-
-  /* ── Manage Subscription ── */
-  const manageSubBtn = document.getElementById('manageSubBtn');
-
-  async function checkPlanAndShowManage() {
-    try {
-      const res = await fetch(BagGuyAuth.API + '/auth/me', {
-        headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
-      });
-      if (!res.ok) return;
-      const me = await res.json();
-      const plan = (me.plan || me.subscription || me.tier || 'free').toLowerCase();
-      if (plan !== 'free' && plan !== 'basic') {
-        manageSubBtn.style.display = 'inline-flex';
-      }
-    } catch (_) {}
-  }
-  checkPlanAndShowManage();
-
-  manageSubBtn.addEventListener('click', async function() {
-    manageSubBtn.disabled = true;
-    manageSubBtn.textContent = 'Loading…';
-    try {
-      const res = await fetch(BagGuyAuth.API + '/billing/portal', {
-        headers: { 'Authorization': 'Bearer ' + BagGuyAuth.getToken() }
-      });
-      const data = await res.json().catch(function(){ return {}; });
-      if (!res.ok) throw new Error(data.detail || data.message || 'HTTP ' + res.status);
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('No portal URL returned');
-      }
-    } catch (e) {
-      showError('Could not open billing portal: ' + (e.message || e));
-    } finally {
-      manageSubBtn.disabled = false;
-      manageSubBtn.textContent = 'Manage Subscription';
+  function renderAccount(me) {
+    currentUser = me || currentUser || {};
+    const email = currentUser.email || '';
+    const name = email ? email.split('@')[0] : 'shopper';
+    els.navEmail.textContent = email;
+    els.hello.textContent = name;
+    const plan = currentUser.plan || currentUser.subscription || currentUser.tier || 'Free Bag';
+    const created = currentUser.created_at || currentUser.createdAt || '';
+    els.account.innerHTML = `
+      <div class="account-line"><span>Email</span><b>${escapeHtml(email || 'Signed in')}</b></div>
+      <div class="account-line"><span>Plan</span><b>${escapeHtml(plan)}</b></div>
+      <div class="account-line"><span>Member since</span><b>${escapeHtml(fmtDate(created))}</b></div>
+    `;
+    if (!['free', 'free bag', 'basic'].includes(String(plan).toLowerCase())) {
+      els.manage.style.display = 'inline-flex';
     }
-  });
+  }
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    BagGuyAuth.logout();
-    location.href = '/';
-  });
+  function renderHistory(history) {
+    if (!history || history.length === 0) {
+      els.activityList.innerHTML = '<div class="empty"><strong>No rewards yet.</strong><br/>Scan a receipt or save a deal to start earning Bag Points.</div>';
+      return;
+    }
+    els.activityList.innerHTML = history.slice(0, 10).map((item) => {
+      const points = Number(item.points || 0);
+      const sign = points > 0 ? '+' : '';
+      const pointClass = points < 0 ? 'points negative' : 'points';
+      const credit = Number(item.storeCreditDelta || item.store_credit_cents || 0);
+      const detail = [item.detail || 'Bag Guy activity', credit ? fmtMoney(credit) + ' Store Credit' : '', fmtDate(item.createdAt || item.created_at)].filter(Boolean).join(' - ');
+      return `
+        <div class="activity-row">
+          <div class="activity-icon">${iconFor(item.type || item.source)}</div>
+          <div>
+            <div class="activity-title">${escapeHtml(item.title || 'Reward activity')}</div>
+            <div class="activity-detail">${escapeHtml(detail)}</div>
+          </div>
+          <div class="${pointClass}">${sign}${points} pts</div>
+        </div>
+      `;
+    }).join('');
+  }
 
-  async function load() {
+  async function getCurrentUser() {
     const token = BagGuyAuth.getToken();
-    const headers = { 'authorization': 'Bearer ' + token };
-
-    try {
-      const [meR, statsR] = await Promise.all([
-        fetch(BagGuyAuth.API + '/auth/me', { headers }),
-        fetch(BagGuyAuth.API + '/stats', { headers }),
-      ]);
-
-      if (meR.status === 401) {
-        BagGuyAuth.logout();
-        location.href = '/login.html';
-        return;
-      }
-
-      if (meR.ok) {
-        const me = await meR.json();
-        document.getElementById('hello').textContent = me.email?.split('@')[0] || 'back';
-        document.getElementById('navEmail').textContent = me.email || '';
-        document.getElementById('accountPanel').textContent = JSON.stringify(me, null, 2);
-        document.getElementById('accountPanel').classList.remove('loading');
-      } else {
-        showError('Could not load account: HTTP ' + meR.status);
-      }
-
-      if (statsR.ok) {
-        const s = await statsR.json();
-        document.getElementById('statUsers').textContent = s.users ?? '—';
-        document.getElementById('statReceipts').textContent = s.receiptsScanned ?? s.receipts ?? '—';
-        const sv = s.savings ?? 0;
-        document.getElementById('statSavings').textContent = typeof sv === 'number' ? ('$' + sv.toFixed(2)) : sv;
-        document.getElementById('rawPanel').textContent = JSON.stringify(s, null, 2);
-        document.getElementById('rawPanel').classList.remove('loading');
-      } else {
-        document.getElementById('rawPanel').textContent = '(unreachable, HTTP ' + statsR.status + ')';
-      }
-    } catch (e) {
-      showError('Network error: ' + (e.message || e));
+    const res = await fetch(BagGuyAuth.API + '/auth/me', { headers: { authorization: 'Bearer ' + token } });
+    if (res.status === 401) {
+      BagGuyAuth.logout();
+      location.href = '/login.html?next=/dashboard.html';
+      return null;
     }
+    if (!res.ok) throw new Error('Account service returned HTTP ' + res.status);
+    const me = await res.json();
+    BagGuyAuth.setUser(me);
+    renderAccount(me);
+    return me;
   }
 
-  load();
-  setInterval(load, 15000);
+  async function loadRewards() {
+    els.refresh.disabled = true;
+    els.refresh.textContent = 'Refreshing...';
+    try {
+      const me = currentUser?.id ? currentUser : await getCurrentUser();
+      if (!me) return;
+      const userId = String(me.id || me.user_id || me.email || 'demo-user');
+      const res = await fetch(BagGuyAuth.API + '/api/rewards/balance?user_id=' + encodeURIComponent(userId));
+      if (!res.ok) throw new Error('Rewards service returned HTTP ' + res.status);
+      const data = await res.json();
+      const points = Number(data.points_balance || data.points || 0);
+      const storeCredit = Number(data.store_credit_cents || data.storeCreditCents || 0);
+      const history = Array.isArray(data.history) ? data.history : [];
+      const milestone = nextMilestone(points);
+      const remaining = Math.max(0, milestone - points);
+      const progress = Math.min(100, Math.round((points / milestone) * 100));
+      const week = history.filter((item) => Number(item.points || 0) > 0).slice(0, 5).reduce((sum, item) => sum + Number(item.points || 0), 0);
 
-  /* ── Receipts History ── */
-  const receiptsBody = document.getElementById('receiptsBody');
+      els.points.textContent = points.toLocaleString();
+      els.credit.textContent = fmtMoney(storeCredit);
+      els.tierChip.textContent = tierFor(points);
+      els.progressTitle.textContent = remaining === 0 ? 'Your next Store Credit reward is ready.' : remaining + ' points until the next milestone';
+      els.progressCopy.textContent = remaining === 0 ? 'You can redeem eligible Store Credit from your rewards screen.' : 'Keep scanning, saving offers, and shopping lists to keep earning.';
+      els.progressBar.style.width = progress + '%';
+      els.weeklyPoints.textContent = week.toLocaleString() + ' pts';
+      els.activityCount.textContent = history.length.toLocaleString();
+      els.updatedAt.textContent = fmtDate(data.updated_at || data.updatedAt || new Date().toISOString());
+      renderHistory(history);
+      showNotice('ok', 'Rewards are synced for this signed-in account.');
+    } catch (e) {
+      showNotice('error', 'Could not reach rewards service. No rewards were changed. Try refreshing after the backend is available.');
+      els.activityList.innerHTML = '<div class="empty"><strong>Rewards unavailable.</strong><br/>Your dashboard will update once the rewards service can be reached.</div>';
+    } finally {
+      els.refresh.disabled = false;
+      els.refresh.textContent = 'Refresh';
+    }
+  }
 
   async function loadReceipts() {
     const token = BagGuyAuth.getToken();
     try {
-      const res = await fetch(BagGuyAuth.API + '/receipts', {
-        headers: { 'authorization': 'Bearer ' + token }
-      });
+      const res = await fetch(BagGuyAuth.API + '/receipts', { headers: { authorization: 'Bearer ' + token } });
       if (!res.ok) {
-        receiptsBody.innerHTML = '<p class="empty-state">Could not load receipts (HTTP ' + res.status + ')</p>';
+        els.receiptsBody.innerHTML = '<div class="empty">Could not load receipts right now.</div>';
+        els.receiptCount.textContent = '-';
         return;
       }
       const data = await res.json();
       const receipts = Array.isArray(data) ? data : (data.receipts || data.items || []);
+      els.receiptCount.textContent = receipts.length.toLocaleString();
       if (receipts.length === 0) {
-        receiptsBody.innerHTML = '<p class="empty-state">No receipts yet. Scan your first receipt above!</p>';
+        els.receiptsBody.innerHTML = '<div class="empty">No receipts yet. Scan your first receipt to start tracking savings.</div>';
         return;
       }
-      let html = '<table class="receipts-table"><thead><tr><th>Date</th><th>Store</th><th>Items</th><th>Savings</th><th>Status</th></tr></thead><tbody>';
-      receipts.forEach(function(r) {
-        const date = r.created_at || r.date || r.scanned_at || '';
-        let fmtDate = date;
-        if (date) { try { fmtDate = new Date(date).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(_){} }
-        const store = r.store || r.merchant || r.store_name || '—';
-        const items = r.item_count ?? r.items_count ?? (Array.isArray(r.items) ? r.items.length : '—');
-        const savings = r.savings ?? r.total_savings ?? 0;
-        const fmtSavings = typeof savings === 'number' ? '$' + savings.toFixed(2) : savings;
-        const status = (r.status || 'done').toLowerCase();
-        const statusClass = status === 'done' || status === 'complete' || status === 'completed' ? 'status-done' : status === 'pending' || status === 'processing' ? 'status-pending' : 'status-failed';
+      let html = '<table class="receipt-table"><thead><tr><th>Date</th><th>Store</th><th>Items</th><th>Savings</th></tr></thead><tbody>';
+      receipts.slice(0, 8).forEach((r) => {
+        const store = r.store || r.merchant || r.store_name || 'Receipt';
+        const items = r.item_count ?? r.items_count ?? (Array.isArray(r.items) ? r.items.length : '-');
+        const savings = Number(r.estimated_savings ?? r.savings ?? r.total_savings ?? 0);
         html += '<tr>' +
-          '<td class="td-date">' + fmtDate + '</td>' +
-          '<td class="td-store">' + store + '</td>' +
-          '<td class="td-items">' + items + '</td>' +
-          '<td class="td-savings">' + fmtSavings + '</td>' +
-          '<td class="td-status ' + statusClass + '">' + status + '</td>' +
+          '<td class="td-date">' + escapeHtml(fmtDate(r.created_at || r.date || r.scanned_at)) + '</td>' +
+          '<td class="td-store">' + escapeHtml(store) + '</td>' +
+          '<td class="td-items">' + escapeHtml(items) + '</td>' +
+          '<td class="td-savings">$' + savings.toFixed(2) + '</td>' +
           '</tr>';
       });
       html += '</tbody></table>';
-      receiptsBody.innerHTML = html;
-    } catch (e) {
-      receiptsBody.innerHTML = '<p class="empty-state">Failed to load receipts.</p>';
+      els.receiptsBody.innerHTML = html;
+    } catch (_) {
+      els.receiptsBody.innerHTML = '<div class="empty">Receipt history is unavailable. Check that the backend is running.</div>';
+      els.receiptCount.textContent = '-';
     }
   }
 
-  loadReceipts();
-  setInterval(loadReceipts, 15000);
-
-  /* ── Receipt Scanner ── */
-  const scanBtn = document.getElementById('scanBtn');
-  const receiptInput = document.getElementById('receiptInput');
-  const scanStatus = document.getElementById('scanStatus');
-  const scanResults = document.getElementById('scanResults');
-  const scanSummary = document.getElementById('scanSummary');
-  const matchedItems = document.getElementById('matchedItems');
-
-  scanBtn.addEventListener('click', () => receiptInput.click());
-
-  receiptInput.addEventListener('change', async () => {
-    const file = receiptInput.files[0];
-    if (!file) return;
-
-    scanBtn.disabled = true;
-    scanStatus.textContent = 'Uploading and scanning receipt…';
-    scanResults.classList.remove('visible');
-    scanSummary.innerHTML = '';
-    matchedItems.innerHTML = '';
-
+  async function scanReceipt(file) {
+    els.scanBtn.disabled = true;
+    els.scanStatus.textContent = 'Uploading receipt and checking eligible savings...';
+    els.scanResult.className = 'scan-result';
+    els.scanResult.textContent = '';
     try {
       const token = BagGuyAuth.getToken();
-      const me = await fetch(BagGuyAuth.API + '/auth/me', {
-        headers: { 'authorization': 'Bearer ' + token }
-      }).then(r => r.json());
-
+      const me = currentUser?.id ? currentUser : await getCurrentUser();
       const form = new FormData();
       form.append('image', file);
-      form.append('user_id', me.id || me.user_id || me.email);
-
-      const res = await fetch('https://bagguy.byorkmc.com/receipts/scan', {
+      form.append('user_id', me?.id || me?.user_id || me?.email || 'dashboard-user');
+      const res = await fetch(BagGuyAuth.API + '/receipts/scan', {
         method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + token },
+        headers: { Authorization: 'Bearer ' + token },
         body: form,
       });
-
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error('Server returned ' + res.status + ': ' + err);
-      }
-
+      if (!res.ok) throw new Error('Receipt service returned HTTP ' + res.status);
       const data = await res.json();
       const items = data.items || data.matched_items || [];
-      const totalSavings = data.total_savings ?? items.reduce((s, i) => s + (i.savings || 0), 0);
-
-      scanSummary.innerHTML =
-        '<div class="pill">' + items.length + ' item' + (items.length !== 1 ? 's' : '') + ' matched</div>' +
-        '<div class="pill">$' + totalSavings.toFixed(2) + ' savings found</div>';
-
-      if (items.length === 0) {
-        matchedItems.innerHTML = '<li><span class="item-name" style="color:var(--muted)">No matching coupons found for this receipt.</span></li>';
-      } else {
-        items.forEach(item => {
-          const li = document.createElement('li');
-          const name = item.name || item.product || item.description || 'Item';
-          const saving = item.savings || item.discount || 0;
-          li.innerHTML = '<span class="item-name">' + name + '</span><span class="item-saving">-$' + saving.toFixed(2) + '</span>';
-          matchedItems.appendChild(li);
-        });
-      }
-
-      scanResults.classList.add('visible');
-      scanStatus.textContent = 'Scan complete.';
-      loadReceipts();
+      const savings = Number(data.total_savings ?? data.estimated_savings ?? data.savings ?? items.reduce((sum, item) => sum + Number(item.savings || item.discount || 0), 0));
+      const points = Number(data.points_earned || data.reward?.points || 0);
+      els.scanResult.innerHTML = '<strong>Receipt processed.</strong><br/>' +
+        escapeHtml(items.length ? items.length + ' matched item' + (items.length === 1 ? '' : 's') : 'No matched offers yet.') +
+        '<br/>Estimated savings: $' + savings.toFixed(2) +
+        '<br/>Bag Points: +' + points.toLocaleString();
+      els.scanResult.className = 'scan-result visible';
+      els.scanStatus.textContent = 'Rewards and receipts are refreshing.';
+      await Promise.all([loadReceipts(), loadRewards()]);
     } catch (e) {
-      scanStatus.textContent = '';
-      showError('Receipt scan failed: ' + (e.message || e));
+      els.scanStatus.textContent = '';
+      els.scanResult.innerHTML = '<strong>Receipt scan could not connect.</strong><br/>Check that the backend is running, then try again. No rewards were confirmed.';
+      els.scanResult.className = 'scan-result visible';
     } finally {
-      scanBtn.disabled = false;
-      receiptInput.value = '';
+      els.scanBtn.disabled = false;
+      els.receiptInput.value = '';
     }
+  }
+
+  els.logout.addEventListener('click', () => {
+    BagGuyAuth.logout();
+    location.href = '/';
+  });
+  els.refresh.addEventListener('click', () => Promise.all([getCurrentUser().then(loadRewards), loadReceipts()]));
+  els.scanShortcut.addEventListener('click', () => document.getElementById('scanPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  els.scanBtn.addEventListener('click', () => els.receiptInput.click());
+  els.receiptInput.addEventListener('change', () => {
+    const file = els.receiptInput.files && els.receiptInput.files[0];
+    if (file) scanReceipt(file);
+  });
+  els.manage.addEventListener('click', async () => {
+    els.manage.disabled = true;
+    els.manage.textContent = 'Loading...';
+    try {
+      const res = await fetch(BagGuyAuth.API + '/billing/portal', { headers: { Authorization: 'Bearer ' + BagGuyAuth.getToken() } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) throw new Error('Could not open billing portal');
+      window.location.href = data.url;
+    } catch (_) {
+      showNotice('error', 'Billing portal is unavailable right now.');
+    } finally {
+      els.manage.disabled = false;
+      els.manage.textContent = 'Manage Subscription';
+    }
+  });
+
+  renderAccount(currentUser || {});
+  getCurrentUser().then(() => Promise.all([loadRewards(), loadReceipts()])).catch(() => {
+    renderAccount(currentUser || {});
+    Promise.all([loadRewards(), loadReceipts()]);
   });
 })();
 </script>
