@@ -51,6 +51,7 @@
       };
 
       if (loggedIn) {
+        host.appendChild(mk(`<a data-auth-inject="1" href="/rewards.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">Rewards</a>`));
         host.appendChild(mk(`<a data-auth-inject="1" href="/dashboard.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">Dashboard</a>`));
         const b = document.createElement('button');
         b.setAttribute('data-auth-inject', '1');

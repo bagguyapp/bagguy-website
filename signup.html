@@ -135,9 +135,9 @@
             return;
           }
         } catch (_) {}
-        // If checkout fails, fall through to dashboard
+        // If checkout fails, fall through to rewards
       }
-      location.href = '/dashboard.html';
+      location.href = '/rewards.html';
     } catch (err) {
       showError(err.message || 'Signup failed');
     } finally {
