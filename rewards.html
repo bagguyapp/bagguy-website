@@ -216,10 +216,10 @@
       if (res.ok) {
         const me = await res.json();
         BagGuyAuth.setUser(me);
-        return String(me.id || me.email || cached?.id || cached?.email || 'demo-user');
+        return String(me.id || me.user_id || me.email || cached?.id || cached?.user_id || cached?.email || 'demo-user');
       }
     } catch (_) {}
-    return String(cached?.id || cached?.email || 'demo-user');
+    return String(cached?.id || cached?.user_id || cached?.email || 'demo-user');
   }
 
   function renderHistory(history) {

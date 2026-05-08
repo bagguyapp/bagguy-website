@@ -1,4 +1,4 @@
-const API = 'https://bagguy.byorkmc.com'
+const API = 'https://api.bagguyapp.com'
 const TOKEN_KEY = 'bagguy_token'
 
 export const auth = {

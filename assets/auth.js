@@ -1,10 +1,9 @@
 // Bag Guy shared auth helpers.
 // Included from every page via <script src="/assets/auth.js"></script>
 (function () {
-  // Set to the public URL of your FastAPI backend (via Cloudflare tunnel).
-  // Default uses your byorkmc.com tunnel — works once you add the hostname in CF.
-  // Switch to https://api.bagguyapp.com once you move bagguyapp.com's DNS to Cloudflare.
-  const API = 'https://bagguy.byorkmc.com';
+  // Production Bag Guy API. Keep this public base URL only; never place secrets
+  // or private API keys in the website bundle.
+  const API = 'https://api.bagguyapp.com';
   const TOKEN_KEY = 'bagguy_token';
   const USER_KEY = 'bagguy_user';
 
@@ -24,6 +23,28 @@
     },
     setUser(u) {
       try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {}
+    },
+    tokenFrom(data) {
+      return data?.token || data?.access_token || null;
+    },
+    userFrom(data) {
+      return data?.user || data?.profile || data || null;
+    },
+    setSession(data) {
+      const token = this.tokenFrom(data);
+      const user = this.userFrom(data);
+      if (!token) throw new Error('The server did not return a session token.');
+      this.setToken(token);
+      if (user) this.setUser(user);
+      return { token, user };
+    },
+    errorText(data, fallback) {
+      const detail = data?.detail || data?.message || data?.error;
+      if (Array.isArray(detail)) {
+        return detail.map((item) => item?.msg || item?.message || String(item)).join(' ');
+      }
+      if (detail && typeof detail === 'object') return detail.msg || detail.message || fallback;
+      return detail || fallback;
     },
     isLoggedIn() { return !!this.getToken(); },
     logout() {

@@ -7,38 +7,39 @@
   <meta name="description" content="Log in to your Bag Guy account."/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0d0d1a;--card:#13132a;--purple:#7c3aed;--pl:#a855f7;--green:#22c55e;--text:#f1f1f1;--muted:#8b8bab;--border:rgba(124,58,237,.18);--danger:#ef4444}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(13,13,26,.96);backdrop-filter:blur(12px);gap:16px;flex-wrap:wrap}
-    .logo{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    :root{--ink:#102019;--muted:#66766f;--bg:#f5faf7;--card:#fff;--green:#0aae63;--green2:#087246;--line:#dce9e2;--mint:#e3fbec;--danger:#b42318;--shadow:0 22px 60px rgba(16,54,36,.12)}
+    body{background:radial-gradient(circle at 14% 0%,rgba(10,174,99,.15),transparent 30%),linear-gradient(180deg,#fbfdfb,var(--bg));color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid rgba(220,233,226,.9);background:rgba(251,253,251,.92);backdrop-filter:blur(16px);gap:16px;flex-wrap:wrap}
+    .logo{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:1.2rem;font-weight:950;text-decoration:none}
+    .logo::before{content:"✓";width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#071d15,var(--green) 76%,#7cf2b0);display:grid;place-items:center;color:#fff;box-shadow:0 12px 26px rgba(10,174,99,.22)}
     .nav-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     .nav-right a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600}
-    .nav-right a:hover{color:var(--text)}
+    .nav-right a:hover{color:var(--ink)}
     main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
-    .auth-card{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 32px}
-    .auth-card h1{font-size:1.7rem;font-weight:800;margin-bottom:8px;text-align:center}
-    .auth-card h1 span{background:linear-gradient(135deg,var(--pl),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .auth-card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:38px 34px;box-shadow:var(--shadow)}
+    .auth-card h1{font-size:2rem;font-weight:950;letter-spacing:-.04em;line-height:1;margin-bottom:10px;text-align:center}
+    .auth-card h1 span{color:var(--green)}
     .auth-card .sub{color:var(--muted);font-size:.9rem;text-align:center;margin-bottom:28px}
     form{display:flex;flex-direction:column;gap:14px}
-    label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-    input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);padding:13px 14px;border-radius:10px;font-size:.95rem;font-family:inherit;transition:border-color .2s}
-    input:focus{outline:none;border-color:var(--pl)}
-    .btn-primary{background:linear-gradient(135deg,var(--purple),var(--pl));color:#fff;padding:14px 24px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:opacity .2s,transform .2s;margin-top:6px}
+    label{font-size:.78rem;color:var(--muted);font-weight:850;letter-spacing:.05em;text-transform:uppercase}
+    input{width:100%;background:#fbfdfb;border:1px solid var(--line);color:var(--ink);padding:14px;border-radius:14px;font-size:.95rem;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+    input:focus{outline:none;border-color:#9be7bb;box-shadow:0 0 0 4px rgba(10,174,99,.11)}
+    .btn-primary{background:var(--green);color:#fff;padding:14px 24px;border-radius:15px;text-decoration:none;font-weight:950;font-size:.95rem;border:none;cursor:pointer;transition:opacity .2s,transform .2s;margin-top:6px;box-shadow:0 14px 30px rgba(10,174,99,.22)}
     .btn-primary:hover:not(:disabled){opacity:.92;transform:translateY(-1px)}
     .btn-primary:disabled{opacity:.55;cursor:not-allowed}
     .msg{font-size:.85rem;padding:10px 12px;border-radius:8px;display:none}
-    .msg.error{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--danger)}
+    .msg.error{display:block;background:#fff0ef;border:1px solid #f0b7b2;color:var(--danger)}
     .auth-footer{margin-top:22px;text-align:center;color:var(--muted);font-size:.85rem}
-    .auth-footer a{color:var(--pl);text-decoration:none;font-weight:600}
+    .auth-footer a{color:var(--green2);text-decoration:none;font-weight:850}
     .auth-footer a:hover{text-decoration:underline}
-    footer{padding:28px 24px;text-align:center;color:var(--muted);font-size:.78rem;border-top:1px solid rgba(255,255,255,.06)}
+    footer{padding:28px 24px;text-align:center;color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);background:#fff}
     footer a{color:var(--muted);text-decoration:none;margin:0 10px}
   </style>
 </head>
 <body>
 
 <nav>
-  <a class="logo" href="/">🛍️ Bag Guy</a>
+  <a class="logo" href="/">Bag Guy</a>
   <div class="nav-right">
     <a href="/signup.html">Sign up</a>
     <a href="/">Home</a>
@@ -100,13 +101,12 @@
         body: JSON.stringify({ email, password }),
       });
       const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data.detail || data.message || `HTTP ${r.status}`);
-      BagGuyAuth.setToken(data.token);
-      BagGuyAuth.setUser(data.user);
+      if (!r.ok) throw new Error(BagGuyAuth.errorText(data, 'Check your email and password, then try again.'));
+      BagGuyAuth.setSession(data);
       const next = new URLSearchParams(window.location.search).get('next');
       location.href = next && next.startsWith('/') ? next : '/rewards.html';
     } catch (err) {
-      showError(err.message || 'Login failed');
+      showError(err.message || 'Could not log in. Check your details and try again.');
     } finally {
       btn.disabled = false; btn.textContent = 'Log in';
     }
