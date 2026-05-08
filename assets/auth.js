@@ -72,17 +72,17 @@
       };
 
       if (loggedIn) {
-        host.appendChild(mk(`<a data-auth-inject="1" href="/rewards.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">Rewards</a>`));
-        host.appendChild(mk(`<a data-auth-inject="1" href="/dashboard.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">Dashboard</a>`));
+        host.appendChild(mk(`<a data-auth-inject="1" href="/rewards.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:800">Rewards</a>`));
+        host.appendChild(mk(`<a data-auth-inject="1" href="/dashboard.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:800">Dashboard</a>`));
         const b = document.createElement('button');
         b.setAttribute('data-auth-inject', '1');
         b.textContent = 'Log out' + (user?.email ? ` (${user.email.split('@')[0]})` : '');
-        b.style.cssText = 'background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 14px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit';
+        b.style.cssText = 'background:#fff;border:1px solid var(--line,#dce9e2);color:var(--muted);padding:9px 14px;border-radius:999px;font-size:.8rem;font-weight:850;cursor:pointer;font-family:inherit';
         b.addEventListener('click', () => { BagGuyAuth.logout(); location.href = '/'; });
         host.appendChild(b);
       } else {
-        host.appendChild(mk(`<a data-auth-inject="1" href="/login.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600">Log in</a>`));
-        host.appendChild(mk(`<a data-auth-inject="1" class="btn-nav" href="/signup.html" style="background:var(--purple);color:#fff;padding:9px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.875rem">Sign up</a>`));
+        host.appendChild(mk(`<a data-auth-inject="1" href="/login.html" style="color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:800">Log in</a>`));
+        host.appendChild(mk(`<a data-auth-inject="1" class="btn-nav" href="/signup.html" style="background:var(--green,#0aae63);color:#fff;padding:9px 16px;border-radius:999px;text-decoration:none;font-weight:900;font-size:.875rem">Sign up</a>`));
       }
     },
   };

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Savings Planner - Bag Guy</title>
+  <meta name="description" content="Build a practical Bag Guy grocery savings plan from your budget, family size, shopping needs, dietary preferences, and local deal priorities."/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --ink:#102019;--ink2:#243b31;--muted:#66766f;--bg:#f5faf7;--card:#fff;
+      --line:#dce9e2;--green:#0aae63;--green2:#087246;--mint:#e3fbec;
+      --gold:#d5a427;--amber:#fff5d7;--red:#b42318;--navy:#081712;
+      --shadow:0 22px 60px rgba(16,54,36,.12);--soft-shadow:0 10px 30px rgba(16,54,36,.06);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:
+      radial-gradient(circle at 15% 0%,rgba(10,174,99,.15),transparent 30%),
+      linear-gradient(180deg,#fbfdfb,var(--bg));color:var(--ink);line-height:1.55;min-height:100vh}
+    a{color:inherit}
+    nav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:15px clamp(18px,5vw,56px);background:rgba(251,253,251,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(220,233,226,.9)}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:950;white-space:nowrap}
+    .brand-mark{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#071d15,#0aae63 76%,#7cf2b0);display:grid;place-items:center;color:#fff;box-shadow:0 12px 26px rgba(10,174,99,.22)}
+    .nav-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .nav-right a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:850}
+    .nav-right a.active{color:var(--green2)}
+    .pill{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;background:#fff;padding:9px 13px;color:var(--muted);font-size:.86rem;font-weight:850;text-decoration:none}
+    main{max-width:1180px;margin:0 auto;padding:42px 22px 78px}
+    .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:22px;align-items:stretch}
+    .hero-card{background:linear-gradient(135deg,#071d15,#0aae63);color:#fff;border-radius:32px;padding:32px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:360px}
+    .hero-card::after{content:"";position:absolute;right:-100px;bottom:-130px;width:340px;height:340px;border-radius:999px;background:rgba(255,255,255,.12)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);border-radius:999px;padding:8px 12px;font-size:.76rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+    h1{font-size:clamp(2.35rem,5.5vw,4.8rem);line-height:.95;letter-spacing:-.06em;margin-bottom:14px;max-width:800px}
+    .hero-copy{max-width:700px;color:rgba(255,255,255,.84);font-size:1.05rem}
+    .hero-points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px;position:relative;z-index:1}
+    .hero-point{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:16px}
+    .hero-point b{display:block;font-size:1.5rem;line-height:1;margin-bottom:6px}
+    .hero-point span{display:block;color:rgba(255,255,255,.76);font-size:.82rem}
+    .planner{background:#fff;border:1px solid var(--line);border-radius:32px;padding:26px;box-shadow:var(--shadow)}
+    .planner h2{font-size:1.45rem;letter-spacing:-.03em;margin-bottom:6px}
+    .planner p{color:var(--muted);font-size:.92rem;margin-bottom:18px}
+    form{display:grid;gap:14px}
+    .field{display:grid;gap:7px}
+    label{font-size:.76rem;color:var(--muted);font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+    input,select,textarea{width:100%;background:#fbfdfb;border:1px solid var(--line);border-radius:14px;padding:13px 14px;color:var(--ink);font:inherit}
+    textarea{min-height:88px;resize:vertical}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#9be7bb;box-shadow:0 0 0 4px rgba(10,174,99,.11)}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{border:0;border-radius:15px;min-height:50px;padding:14px 18px;font:inherit;font-weight:950;cursor:pointer;transition:transform .15s,opacity .15s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--green);color:#fff;box-shadow:0 14px 30px rgba(10,174,99,.22)}
+    .btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+    .results{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;margin-top:22px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;box-shadow:var(--soft-shadow)}
+    .panel.dark{background:var(--navy);color:#f7fff9;border-color:rgba(255,255,255,.12);position:relative;overflow:hidden}
+    .panel.dark::after{content:"";position:absolute;right:-90px;bottom:-120px;width:290px;height:290px;border-radius:999px;background:rgba(10,174,99,.16)}
+    .section-kicker{color:var(--green2);font-weight:950;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+    .panel.dark .section-kicker{color:#8df5bd}
+    .panel h2{font-size:1.3rem;letter-spacing:-.03em;margin-bottom:14px}
+    .score{position:relative;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin-bottom:18px}
+    .score-ring{width:94px;height:94px;border-radius:999px;background:conic-gradient(var(--green) var(--deg),rgba(255,255,255,.15) 0);display:grid;place-items:center}
+    .score-inner{width:72px;height:72px;border-radius:999px;background:var(--navy);display:grid;place-items:center;font-size:1.55rem;font-weight:950}
+    .score-copy p{color:#aac1b7;font-size:.92rem}
+    .plan-grid{display:grid;gap:12px}
+    .plan-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fbfdfb}
+    .plan-card b{display:block;margin-bottom:5px}
+    .plan-card span,.plan-card li{color:var(--muted);font-size:.9rem}
+    .plan-card ul{padding-left:18px;margin-top:8px}
+    .panel.dark .plan-card{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+    .panel.dark .plan-card span,.panel.dark .plan-card li{color:#aac1b7}
+    .meal-list{display:grid;gap:10px}
+    .meal{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:13px;background:#fbfdfb}
+    .meal-icon{width:44px;height:44px;border-radius:15px;background:var(--mint);display:grid;place-items:center;color:var(--green2);font-weight:950}
+    .meal-title{font-weight:950}
+    .meal-detail{color:var(--muted);font-size:.84rem}
+    .meal-cost{font-weight:950;color:var(--green2);white-space:nowrap}
+    .note{border-radius:18px;padding:16px;background:#fff5d7;border:1px solid #efd481;color:#73560a;font-size:.9rem;font-weight:750;margin-top:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    footer{padding:32px 22px;text-align:center;color:var(--muted);font-size:.86rem;border-top:1px solid var(--line);background:#fff}
+    footer a{color:var(--green2);font-weight:850;text-decoration:none;margin:0 8px}
+    @media(max-width:940px){.hero,.results{grid-template-columns:1fr}.hero-points{grid-template-columns:1fr 1fr 1fr}}
+    @media(max-width:640px){nav{align-items:center}.brand{font-size:1rem}.nav-right{gap:9px}.nav-right a,.pill{font-size:.82rem}.hero-card,.planner,.panel{border-radius:22px;padding:20px}.hero-points,.split{grid-template-columns:1fr}.meal{grid-template-columns:40px minmax(0,1fr)}.meal-cost{grid-column:2;justify-self:start}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/"><span class="brand-mark">AI</span><span>Bag Guy</span></a>
+  <div class="nav-right">
+    <a href="/">Home</a>
+    <a class="active" href="/ai-savings.html">AI Planner</a>
+    <a href="/rewards.html">Rewards</a>
+    <a class="pill" href="/signup.html">Start saving</a>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">AI savings command center</div>
+      <h1>Turn a grocery budget into a shopping plan.</h1>
+      <p class="hero-copy">Bag Guy's planner translates your weekly budget, household size, store habits, diet needs, and shopping goals into a realistic scan-first savings plan. It does not guarantee deals, but it gives you the right actions to check first.</p>
+      <div class="hero-points">
+        <div class="hero-point"><b>Scan</b><span>Product and receipt checks</span></div>
+        <div class="hero-point"><b>Match</b><span>Deals, coupons, weekly ads</span></div>
+        <div class="hero-point"><b>Plan</b><span>Meals and list priorities</span></div>
+      </div>
+    </div>
+
+    <aside class="planner">
+      <h2>Build your plan</h2>
+      <p>Enter your shopping context. The planner runs locally in your browser and does not require an API key.</p>
+      <form id="plannerForm">
+        <div class="split">
+          <div class="field">
+            <label for="budget">Weekly budget</label>
+            <input id="budget" type="number" min="25" max="1000" step="5" value="125"/>
+          </div>
+          <div class="field">
+            <label for="family">Household size</label>
+            <input id="family" type="number" min="1" max="12" step="1" value="3"/>
+          </div>
+        </div>
+        <div class="split">
+          <div class="field">
+            <label for="zip">ZIP Code</label>
+            <input id="zip" inputmode="numeric" placeholder="29501" value="29501"/>
+          </div>
+          <div class="field">
+            <label for="store">Primary store</label>
+            <select id="store">
+              <option>Kroger</option>
+              <option>Walmart</option>
+              <option>Target</option>
+              <option>Publix</option>
+              <option>Aldi</option>
+              <option>Local grocery</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="diet">Food preferences</label>
+          <select id="diet">
+            <option>No special diet</option>
+            <option>Kid-friendly</option>
+            <option>High protein</option>
+            <option>Vegetarian</option>
+            <option>Low prep time</option>
+            <option>SNAP-friendly focus</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="needs">What do you need this week?</label>
+          <textarea id="needs" placeholder="Example: breakfasts, school snacks, chicken dinners, paper towels">milk, cereal, chicken dinners, snacks, paper towels</textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Generate savings plan</button>
+      </form>
+    </aside>
+  </section>
+
+  <section class="results">
+    <div class="panel dark">
+      <div class="section-kicker">Savings strategy</div>
+      <div class="score">
+        <div class="score-ring" id="scoreRing" style="--deg:258deg"><div class="score-inner" id="scoreValue">72</div></div>
+        <div class="score-copy">
+          <h2 id="planTitle">Balanced grocery savings plan</h2>
+          <p id="planSummary">Scan pantry staples first, prioritize weekly ad proteins, and reserve points actions for receipts and saved offers.</p>
+        </div>
+      </div>
+      <div class="plan-grid" id="strategyList"></div>
+      <div class="note">Eligibility, offer availability, and Store Credit depend on live retailer and partner data. Bag Guy helps you check and organize savings; it does not guarantee redemption.</div>
+    </div>
+
+    <div class="panel">
+      <div class="section-kicker">Meal ideas</div>
+      <h2>Budget-aware recipe starts</h2>
+      <div class="meal-list" id="mealList"></div>
+      <div class="actions">
+        <a class="btn btn-primary" href="/signup.html">Save this plan</a>
+        <a class="btn btn-secondary" href="/how-to/">How Bag Guy works</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="results">
+    <div class="panel">
+      <div class="section-kicker">Scan checklist</div>
+      <h2>What to do in the app</h2>
+      <div class="plan-grid" id="checklist"></div>
+    </div>
+    <div class="panel">
+      <div class="section-kicker">Trust rules</div>
+      <h2>Built to avoid fake savings</h2>
+      <div class="plan-grid">
+        <div class="plan-card"><b>High confidence first</b><span>Exact UPC matches are the safest coupon matches to highlight.</span></div>
+        <div class="plan-card"><b>Check eligibility</b><span>Brand or category matches should be reviewed before purchase.</span></div>
+        <div class="plan-card"><b>Receipt confirmation</b><span>Receipt-based points are applied after eligible offers are processed.</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>Bag Guy AI Savings Planner</strong><br/>
+  <a href="/">Home</a>
+  <a href="/support/">Support</a>
+  <a href="/privacy/">Privacy</a>
+</footer>
+
+<script src="/assets/auth.js"></script>
+<script>
+(() => {
+  const form = document.getElementById('plannerForm');
+  const scoreRing = document.getElementById('scoreRing');
+  const scoreValue = document.getElementById('scoreValue');
+  const planTitle = document.getElementById('planTitle');
+  const planSummary = document.getElementById('planSummary');
+  const strategyList = document.getElementById('strategyList');
+  const mealList = document.getElementById('mealList');
+  const checklist = document.getElementById('checklist');
+
+  const money = (n) => '$' + Number(n).toFixed(0);
+  const clean = (value) => String(value || '').trim();
+  const has = (haystack, words) => words.some((word) => haystack.includes(word));
+
+  function planFromInputs() {
+    const budget = Math.max(25, Number(document.getElementById('budget').value || 125));
+    const family = Math.max(1, Number(document.getElementById('family').value || 3));
+    const zip = clean(document.getElementById('zip').value) || 'your area';
+    const store = clean(document.getElementById('store').value);
+    const diet = clean(document.getElementById('diet').value);
+    const needs = clean(document.getElementById('needs').value).toLowerCase();
+    const perPerson = budget / family;
+    const proteinFocus = has(needs, ['chicken','beef','turkey','fish','eggs','protein']);
+    const householdFocus = has(needs, ['paper','detergent','diaper','soap','clean','towel']);
+    const breakfastFocus = has(needs, ['milk','cereal','breakfast','oat','yogurt']);
+    const snackFocus = has(needs, ['snack','chips','bars','school']);
+    const lowBudget = perPerson < 40;
+    const score = Math.max(48, Math.min(94,
+      58 +
+      (lowBudget ? 12 : 4) +
+      (proteinFocus ? 8 : 0) +
+      (householdFocus ? 6 : 0) +
+      (breakfastFocus ? 6 : 0) +
+      (snackFocus ? 4 : 0) +
+      (diet !== 'No special diet' ? 4 : 0)
+    ));
+
+    const proteinBudget = Math.round(budget * (proteinFocus ? .31 : .24));
+    const staplesBudget = Math.round(budget * (lowBudget ? .34 : .27));
+    const householdBudget = Math.round(budget * (householdFocus ? .18 : .1));
+    const flexBudget = Math.max(10, budget - proteinBudget - staplesBudget - householdBudget);
+
+    return { budget, family, zip, store, diet, needs, perPerson, lowBudget, proteinFocus, householdFocus, breakfastFocus, snackFocus, score, proteinBudget, staplesBudget, householdBudget, flexBudget };
+  }
+
+  function renderPlan() {
+    const p = planFromInputs();
+    scoreValue.textContent = p.score;
+    scoreRing.style.setProperty('--deg', Math.round(p.score * 3.6) + 'deg');
+    planTitle.textContent = p.lowBudget ? 'Tight-budget savings plan' : 'Balanced grocery savings plan';
+    planSummary.textContent = `${p.store} near ${p.zip}: start with UPC scans for staples, then compare weekly ad proteins, then scan the receipt to confirm eligible points.`;
+
+    const strategies = [
+      {
+        title: '1. Scan staple UPCs before shopping',
+        body: `Budget ${money(p.staplesBudget)} for milk, cereal, rice, pasta, beans, and pantry basics. Exact UPC scans should be checked before brand/category alternatives.`
+      },
+      {
+        title: '2. Build meals around ad proteins',
+        body: `Use about ${money(p.proteinBudget)} for proteins. If live weekly ads show a strong price, make that the anchor for 2 or 3 meals.`
+      },
+      {
+        title: '3. Protect household essentials',
+        body: p.householdFocus
+          ? `Reserve about ${money(p.householdBudget)} for household items. Look for high-confidence coupons and avoid buying extra unless eligibility is clear.`
+          : `Keep household purchases separate from meal spending so paper goods or cleaning items do not quietly consume the grocery budget.`
+      },
+      {
+        title: '4. Use receipt scan for final confirmation',
+        body: 'After checkout, scan the receipt to record the trip, check matched offers, and update Bag Points history when rewards are confirmed.'
+      }
+    ];
+
+    strategyList.innerHTML = strategies.map((item) => `
+      <div class="plan-card"><b>${item.title}</b><span>${item.body}</span></div>
+    `).join('');
+
+    const meals = buildMeals(p);
+    mealList.innerHTML = meals.map((meal) => `
+      <div class="meal">
+        <div class="meal-icon">${meal.icon}</div>
+        <div>
+          <div class="meal-title">${meal.title}</div>
+          <div class="meal-detail">${meal.detail}</div>
+        </div>
+        <div class="meal-cost">${money(meal.cost)}</div>
+      </div>
+    `).join('');
+
+    checklist.innerHTML = [
+      ['Before the store', 'Open Bag Guy Deals and clip/save exact UPC matches first.'],
+      ['At the shelf', 'Scan products with medium/low confidence matches and check quantity, size, and retailer restrictions.'],
+      ['At checkout', 'Use the Bag Guy scan code when available, then keep the paper or digital receipt.'],
+      ['After checkout', 'Scan the receipt and check Rewards for a single history entry per receipt attempt.']
+    ].map(([title, body]) => `<div class="plan-card"><b>${title}</b><span>${body}</span></div>`).join('');
+  }
+
+  function buildMeals(p) {
+    if (p.diet === 'Vegetarian') {
+      return [
+        { icon:'BWL', title:'Bean and rice bowls', detail:'Rice, beans, frozen vegetables, salsa, cheese optional', cost: Math.max(9, p.family * 4) },
+        { icon:'PST', title:'Veggie pasta skillet', detail:'Pasta, tomato sauce, spinach, pantry seasoning', cost: Math.max(10, p.family * 4) },
+        { icon:'EGG', title:'Breakfast-for-dinner wraps', detail:'Eggs or tofu, tortillas, potatoes, fruit side', cost: Math.max(11, p.family * 5) }
+      ];
+    }
+    if (p.diet === 'High protein') {
+      return [
+        { icon:'CHK', title:'Chicken rice prep bowls', detail:'Chicken, rice, frozen vegetables, sauce or seasoning', cost: Math.max(14, p.family * 6) },
+        { icon:'EGG', title:'Egg and yogurt breakfast kit', detail:'Eggs, yogurt, oats, fruit, coupon-check dairy UPCs', cost: Math.max(12, p.family * 5) },
+        { icon:'TUN', title:'Tuna or turkey lunch boxes', detail:'Protein, crackers or wraps, carrots, fruit', cost: Math.max(13, p.family * 5) }
+      ];
+    }
+    if (p.diet === 'Low prep time') {
+      return [
+        { icon:'ROT', title:'Rotisserie-style dinner plates', detail:'Ready protein, bag salad, microwave rice', cost: Math.max(16, p.family * 7) },
+        { icon:'PAN', title:'One-pan taco skillet', detail:'Ground meat or beans, tortillas, salsa, cheese', cost: Math.max(14, p.family * 6) },
+        { icon:'SOUP', title:'Soup and sandwich night', detail:'Soup, bread, cheese or turkey, fruit side', cost: Math.max(12, p.family * 5) }
+      ];
+    }
+    return [
+      { icon:'TCO', title:'Budget taco bowls', detail:'Protein or beans, rice, salsa, lettuce, cheese optional', cost: Math.max(13, p.family * 5) },
+      { icon:'CHK', title:'Sheet-pan chicken dinner', detail:'Chicken, potatoes, carrots, frozen vegetables', cost: Math.max(15, p.family * 6) },
+      { icon:'BRK', title:'Breakfast and snack kit', detail:'Milk, cereal or oats, yogurt, fruit, school snacks', cost: Math.max(12, p.family * 5) }
+    ];
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    renderPlan();
+    document.querySelector('.results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  renderPlan();
+})();
+</script>
+</body>
+</html>
