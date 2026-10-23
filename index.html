@@ -1,378 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bag Guy — One Scan. Every Deal. Automatic Rewards.</title>
-  <meta name="description" content="Bag Guy is an AI savings app for groceries, household items, and everyday essentials. Scan once, discover local deals, earn Bag Points, plan meals, and share savings."/>
-  <meta property="og:title" content="Bag Guy"/>
-  <meta property="og:description" content="One scan. Every deal. Automatic rewards."/>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --ink:#102019;--ink-2:#1f352b;--muted:#66766f;--soft:#eef7f2;
-      --bg:#fbfdfb;--card:#ffffff;--line:#dce9e2;--green:#0aae63;--green-dark:#087246;
-      --mint:#dffbea;--blue:#2563eb;--gold:#d5a427;--amber:#fff5d7;--navy:#081712;
-      --shadow:0 22px 60px rgba(16,54,36,.13);--shadow-soft:0 12px 34px rgba(16,54,36,.08);
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#fbfdfb 0%,#f2f8f4 72%,#fbfdfb 100%);color:var(--ink);line-height:1.55}
-    a{color:inherit}
-    .page{overflow:hidden}
-    nav{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:15px clamp(18px,5vw,58px);background:rgba(251,253,251,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(220,233,226,.82)}
-    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:950;font-size:1.14rem;letter-spacing:-.02em}
-    .brand span:last-child{white-space:nowrap}
-    .brand-mark{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,#071d15 0%,#0aae63 76%,#7cf2b0 100%);display:grid;place-items:center;color:#fff;box-shadow:0 14px 30px rgba(10,174,99,.28);position:relative;overflow:hidden}
-    .brand-mark::after{content:"";position:absolute;right:4px;top:4px;width:11px;height:11px;border-radius:999px;background:#d5a427;box-shadow:0 0 0 3px rgba(255,246,200,.55)}
-    .brand-mark svg{width:27px;height:27px;position:relative;z-index:1}
-    .navlinks{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-    .navlinks a{font-size:.9rem;font-weight:800;text-decoration:none;color:var(--muted)}
-    .navlinks a:hover{color:var(--ink)}
-    .nav-cta{background:var(--ink);color:#fff!important;border-radius:999px;padding:10px 15px;text-decoration:none}
-    .hero-wrap{position:relative}
-    .hero-wrap::before{content:"";position:absolute;inset:0 0 auto 0;height:640px;background:
-      radial-gradient(circle at 15% 18%,rgba(10,174,99,.17),transparent 28%),
-      radial-gradient(circle at 78% 8%,rgba(37,99,235,.10),transparent 24%),
-      linear-gradient(180deg,#fbfdfb,rgba(251,253,251,0));pointer-events:none}
-    .hero{position:relative;max-width:1210px;margin:0 auto;padding:78px 22px 34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.92fr);gap:46px;align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #bfeccf;background:#effcf4;color:var(--green-dark);border-radius:999px;padding:8px 13px;font-size:.76rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
-    .pulse{width:8px;height:8px;border-radius:999px;background:var(--green);box-shadow:0 0 0 6px rgba(10,174,99,.12)}
-    h1{font-size:clamp(3rem,7.2vw,6.4rem);line-height:.9;letter-spacing:-.07em;margin-bottom:22px;max-width:790px}
-    .accent{color:var(--green)}
-    .hero-copy{font-size:1.16rem;color:var(--muted);max-width:650px;margin-bottom:28px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:15px;padding:15px 20px;font-weight:950;text-decoration:none;border:0;cursor:pointer;min-height:52px;transition:transform .16s,box-shadow .16s,background .16s}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:var(--green);color:#fff;box-shadow:0 18px 36px rgba(10,174,99,.24)}
-    .btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 20px rgba(16,54,36,.05)}
-    .trust{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.88rem}
-    .trust span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px}
-    .hero-visual{position:relative;min-height:650px}
-    .phone{position:relative;margin-left:auto;width:min(390px,100%);background:#0a1812;border-radius:38px;padding:13px;border:1px solid rgba(8,23,18,.18);box-shadow:var(--shadow);z-index:2}
-    .screen{background:#f8fbf9;border-radius:28px;overflow:hidden;min-height:624px;color:var(--ink)}
-    .app-top{background:linear-gradient(135deg,#071b14,#0aae63);padding:24px 20px 22px;color:#fff}
-    .app-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-    .avatar{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:950}
-    .tag{font-size:.72rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;opacity:.82}
-    .app-top h2{font-size:2.05rem;line-height:1.02;letter-spacing:-.04em;margin-bottom:14px}
-    .balance-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .balance{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:13px}
-    .balance b{font-size:1.35rem;display:block}
-    .balance span{font-size:.77rem;opacity:.82}
-    .app-body{padding:16px;display:grid;gap:12px}
-    .scan-cta{background:var(--green);color:#fff;border-radius:18px;padding:16px;font-weight:950;text-align:center;box-shadow:0 12px 26px rgba(10,174,99,.24)}
-    .quick-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .quick{background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px 6px;text-align:center;font-size:.72rem;font-weight:850;color:var(--ink-2)}
-    .deal-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:12px;align-items:center}
-    .deal-img{height:50px;border-radius:15px;background:var(--soft);display:grid;place-items:center;font-weight:950;color:var(--green)}
-    .deal-card b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .deal-card span{display:block;color:var(--muted);font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .save-badge{background:var(--mint);color:var(--green-dark);border-radius:999px;padding:7px 9px;font-size:.72rem;font-weight:950}
-    .progress{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}
-    .progress strong{display:block;font-size:.92rem;margin-bottom:8px}
-    .bar{height:9px;background:#e5eee9;border-radius:999px;overflow:hidden}
-    .bar span{display:block;width:78%;height:100%;background:linear-gradient(90deg,var(--green),#72e7a8);border-radius:999px}
-    .float-card{position:absolute;background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow-soft);z-index:3}
-    .float-card strong{display:block;font-size:.95rem}
-    .float-card span{color:var(--muted);font-size:.8rem}
-    .float-left{left:0;top:86px;width:205px}
-    .float-right{right:-14px;bottom:74px;width:218px}
-    .float-mini{display:flex;gap:10px;align-items:center}
-    .float-icon{width:42px;height:42px;border-radius:14px;background:var(--soft);display:grid;place-items:center;color:var(--green);font-weight:950}
-    .proof{max-width:1210px;margin:0 auto;padding:4px 22px 52px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .proof-card{background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 10px 26px rgba(16,54,36,.05)}
-    .proof-card b{display:block;font-size:1.55rem;color:var(--green);letter-spacing:-.03em}
-    .proof-card span{color:var(--muted);font-size:.88rem}
-    section{max-width:1210px;margin:0 auto;padding:68px 22px}
-    .section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:26px}
-    .section-kicker{color:var(--green-dark);font-weight:950;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-    .section-head h2{font-size:clamp(2rem,4.4vw,3.65rem);line-height:.96;letter-spacing:-.055em;max-width:690px}
-    .section-head p{max-width:560px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .app-map{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-    .app-tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 26px rgba(16,54,36,.045);min-height:124px}
-    .app-tile b{display:block;font-size:.98rem;margin-bottom:7px;color:var(--ink)}
-    .app-tile span{display:block;color:var(--muted);font-size:.84rem;line-height:1.4}
-    .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 12px 34px rgba(16,54,36,.06);transition:transform .16s,border-color .16s}
-    .card:hover{transform:translateY(-3px);border-color:#b8dac8}
-    .icon{width:48px;height:48px;border-radius:16px;background:var(--soft);display:grid;place-items:center;margin-bottom:16px;color:var(--green);font-weight:950}
-    .card h3{font-size:1.11rem;margin-bottom:8px}
-    .card p,.card li{color:var(--muted);font-size:.94rem}
-    .card ul{padding-left:18px;margin-top:10px}
-    .journey{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
-    .journey-panel{background:#fff;border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow-soft)}
-    .journey-list{display:grid;gap:12px;margin-top:18px}
-    .journey-item{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:18px;background:#fbfdfb}
-    .num{width:38px;height:38px;border-radius:13px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:950}
-    .journey-item b{display:block;margin-bottom:3px}
-    .journey-item span{color:var(--muted);font-size:.9rem}
-    .dashboard{background:var(--navy);color:#f7fff9;border-radius:28px;padding:24px;position:relative;overflow:hidden}
-    .dashboard::before{content:"";position:absolute;inset:auto -80px -100px auto;width:260px;height:260px;border-radius:999px;background:rgba(10,174,99,.18)}
-    .dash-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
-    .dash-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px}
-    .dash-card b{display:block;font-size:1.5rem}
-    .dash-card span{color:#aac1b7;font-size:.82rem}
-    .dark-band{max-width:none;background:#0b1c15;margin-top:36px}
-    .dark-inner{max-width:1210px;margin:0 auto;padding:72px 22px}
-    .dark-band .section-head h2,.dark-band h3{color:#f7fff9}
-    .dark-band .section-head p,.dark-band .card p,.dark-band .card li{color:#aac1b7}
-    .dark-band .card{background:#12271f;border-color:rgba(255,255,255,.12);box-shadow:none}
-    .dark-band .icon{background:rgba(10,174,99,.14);color:#8df5bd}
-    .snap-card{background:#fff9e6;border-color:#f1df9f}
-    .snap-card .icon{background:#fff0b8;color:#9b7412}
-    .compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .compare-card{border-radius:26px;padding:24px;border:1px solid var(--line);background:#fff}
-    .compare-card.good{border-color:#b7efce;background:#f3fcf6}
-    .compare-card h3{margin-bottom:12px}
-    .compare-card ul{padding-left:20px;color:var(--muted)}
-    .cta{max-width:1210px;margin:0 auto;padding:26px 22px 82px}
-    .cta-inner{background:linear-gradient(135deg,#073321,#0aae63 72%,#9bf4c5);border-radius:34px;padding:42px;color:#fff;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;box-shadow:var(--shadow)}
-    .cta h2{font-size:clamp(2rem,4.5vw,3.8rem);line-height:.95;letter-spacing:-.05em;margin-bottom:10px}
-    .cta p{color:rgba(255,255,255,.84);max-width:620px}
-    footer{border-top:1px solid var(--line);padding:34px 22px;text-align:center;color:var(--muted);font-size:.9rem;background:#fff}
-    footer a{color:var(--green-dark);font-weight:850;text-decoration:none;margin:0 8px}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-visual{min-height:auto}.float-card{position:relative;left:auto;right:auto;top:auto;bottom:auto;margin-top:12px;width:auto}.phone{margin:0 auto}.proof,.grid,.app-map{grid-template-columns:1fr 1fr}.journey,.compare,.cta-inner{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:12px}}
-    @media(max-width:640px){nav{align-items:center}.brand{font-size:1rem}.brand-mark{width:38px;height:38px;border-radius:13px}.navlinks{gap:10px}.navlinks a{font-size:.84rem}.nav-cta{padding:9px 12px}.hero{padding-top:44px}.proof,.grid,.app-map,.dash-grid{grid-template-columns:1fr}.phone{border-radius:28px}.screen{min-height:auto}.quick-row{grid-template-columns:1fr 1fr}.deal-card{grid-template-columns:46px minmax(0,1fr)}.save-badge{grid-column:2;justify-self:start}.dark-inner,section{padding-top:54px;padding-bottom:54px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bag Guy: Make every grocery dollar go further</title>
+<meta name="description" content="Bag Guy is a grocery savings app for SNAP and EBT shoppers and anyone on a budget. Scan receipts, find SNAP-friendly deals, earn Bag Points, and plan around your weekly budget.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.bagguyapp.com/">
+<meta name="theme-color" content="#070B14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bag Guy">
+<meta property="og:title" content="Bag Guy: Make every grocery dollar go further">
+<meta property="og:description" content="Bag Guy is a grocery savings app for SNAP and EBT shoppers and anyone on a budget. Scan receipts, find SNAP-friendly deals, earn Bag Points, and plan around your weekly budget.">
+<meta property="og:url" content="https://www.bagguyapp.com/">
+<meta property="og:image" content="https://www.bagguyapp.com/assets/brand/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="apple-itunes-app" content="app-id=6763378440">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/brand/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
-  <div class="page">
-    <nav>
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M7.1 9.6V7.7C7.1 4.9 9.3 2.8 12 2.8S16.9 4.9 16.9 7.7v1.9" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/><path d="M5.4 9.1h13.2l1.2 11.1H4.2L5.4 9.1Z" fill="rgba(255,255,255,.18)" stroke="currentColor" stroke-width="2.15" stroke-linejoin="round"/><path d="m8.6 14.9 2.2 2.2 4.8-5.4" stroke="#071D15" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-        <span>Bag Guy</span>
-      </a>
-      <div class="navlinks">
-        <a href="#features">Features</a>
-        <a href="/ai-savings.html">AI Planner</a>
-        <a href="/rewards.html">Rewards</a>
-        <a href="/how-to/">How to use</a>
-        <a href="/crypto/">Crypto layer</a>
-        <a class="nav-cta" href="/support/">Support</a>
-      </div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap head-row">
+    <a class="brand" href="/" aria-label="Bag Guy home"><img src="/assets/brand/icon-96.png" alt="" width="34" height="34">Bag Guy</a>
+    <nav class="nav" aria-label="Main">
+      <a href="/how-to/" >How it works</a>
+      <a href="/guide/" >SNAP savings guide</a>
+      <a href="/about/" >About</a>
+      <a href="/support/" >Support</a>
+      <a class="menu-link" href="/guide/">Guide</a>
+      <a class="btn btn-primary btn-sm" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Get the app</a>
     </nav>
-
-    <header class="hero-wrap">
-      <section class="hero">
-        <div>
-          <div class="eyebrow"><span class="pulse"></span> AI savings app for real grocery trips</div>
-          <h1>Save smarter<br/>on every trip.</h1>
-          <p class="hero-copy">Bag Guy brings local deals, weekly ads, receipt scanning, Bag Points, Store Credit, meal planning, and shareable shopping lists into one clean app.</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="/how-to/">See how it works</a>
-            <a class="btn btn-secondary" href="/rewards.html">Open rewards dashboard</a>
-          </div>
-          <div class="trust">
-            <span>One scan. Every deal.</span>
-            <span>No crypto required for shoppers</span>
-            <span>Checkout-safe eligibility language</span>
-          </div>
-        </div>
-
-        <div class="hero-visual" aria-label="Bag Guy product preview">
-          <div class="float-card float-left">
-            <div class="float-mini">
-              <div class="float-icon">+42</div>
-              <div><strong>Bag Points earned today</strong><span>Receipt scan + saved offers</span></div>
-            </div>
-          </div>
-
-          <div class="phone">
-            <div class="screen">
-              <div class="app-top">
-                <div class="app-head">
-                  <div>
-                    <div class="tag">Smart savings near you</div>
-                    <strong>Florence, SC</strong>
-                  </div>
-                  <div class="avatar">BG</div>
-                </div>
-                <h2>You saved $18.20 this week</h2>
-                <div class="balance-row">
-                  <div class="balance"><b>286</b><span>Bag Points</span></div>
-                  <div class="balance"><b>$14.30</b><span>Store Credit</span></div>
-                </div>
-              </div>
-              <div class="app-body">
-                <div class="scan-cta">Scan to Save</div>
-                <div class="quick-row">
-                  <div class="quick">Receipt</div>
-                  <div class="quick">Deals</div>
-                  <div class="quick">Meals</div>
-                  <div class="quick">Share</div>
-                </div>
-                <div class="deal-card"><div class="deal-img">W</div><div><b>Save $3 on milk</b><span>Walmart · Today · +10 points</span></div><div class="save-badge">Save</div></div>
-                <div class="deal-card"><div class="deal-img">P</div><div><b>BOGO family cereal</b><span>Publix · Expiring soon · +6 points</span></div><div class="save-badge">Clip</div></div>
-                <div class="deal-card"><div class="deal-img">AI</div><div><b>Budget taco bowls</b><span>Meal plan under $18 · +25 points</span></div><div class="save-badge">Shop</div></div>
-                <div class="progress"><strong>14 points from next reward</strong><div class="bar"><span></span></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="float-card float-right">
-            <div class="float-mini">
-              <div class="float-icon">$5</div>
-              <div><strong>New deal nearby</strong><span>Household essentials · Target</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="proof">
-        <div class="proof-card"><b>1 scan</b><span>checkout code, products, or receipts</span></div>
-        <div class="proof-card"><b>10+ screens</b><span>home, scan, deals, rewards, meals, lists</span></div>
-        <div class="proof-card"><b>4 tiers</b><span>Free, Small, Medium, Large Bag</span></div>
-        <div class="proof-card"><b>0 crypto</b><span>required for regular shoppers</span></div>
-      </div>
-    </header>
-
-    <section id="features">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Core product</div>
-          <h2>Built for shoppers who want savings without extra work.</h2>
-        </div>
-        <p>Bag Guy turns the messy world of coupons, weekly ads, local offers, receipts, and meal planning into a simple scan-first workflow.</p>
-      </div>
-      <div class="grid">
-        <article class="card"><div class="icon">01</div><h3>Universal Scan</h3><p>Show one scan code at checkout, scan products, or scan receipts to match eligible savings and rewards.</p></article>
-        <article class="card"><div class="icon">02</div><h3>Deals Marketplace</h3><p>Browse local offers, manufacturer coupons, weekly grocery deals, household savings, and SNAP-friendly deals.</p></article>
-        <article class="card"><div class="icon">03</div><h3>Bag Points + Store Credit</h3><p>Earn Bag Points from eligible shopping actions and redeem rewards as Store Credit when available.</p></article>
-        <article class="card"><div class="icon">04</div><h3>AI Meal Planner</h3><p>Plan meals by budget, family size, cooking time, and local weekly ads. Add ingredients to your shopping list.</p></article>
-        <article class="card"><div class="icon">05</div><h3>Shopping List</h3><p>Add items manually, shop recipes, match coupons, check off items, and scan at checkout.</p></article>
-        <article class="card"><div class="icon">06</div><h3>Shopper Share</h3><p>Share lists, recipes, coupons, weekly deals, and budget baskets. Earn points when shared content helps others save.</p></article>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">What is in the app</div>
-          <h2>The landing page matches the real mobile product.</h2>
-        </div>
-        <p>Bag Guy is not positioned as a single coupon page. It is a complete shopping utility with scan, deals, rewards, planning, sharing, local context, and account controls.</p>
-      </div>
-      <div class="app-map">
-        <div class="app-tile"><b>Onboarding</b><span>Start saving instantly with location and privacy trust cues.</span></div>
-        <div class="app-tile"><b>Home</b><span>Savings dashboard with Bag Points, Store Credit, nearby deals, and quick actions.</span></div>
-        <div class="app-tile"><b>Scan</b><span>Checkout scan code, product scanner, receipt scan, matched savings, and reward history.</span></div>
-        <div class="app-tile"><b>Deals</b><span>Readable full-width offers, categories, manufacturer coupons, local deals, and eligibility text.</span></div>
-        <div class="app-tile"><b>Rewards</b><span>Bag Points balance, Store Credit value, milestones, activity, and redemption states.</span></div>
-        <div class="app-tile"><b>Membership</b><span>Free Bag, Small Bag, Medium Bag, and Large Bag upgrade paths.</span></div>
-        <div class="app-tile"><b>AI Meal Planner</b><span>Budget, family size, cooking time, recipe cards, matched deals, and shopping-list creation.</span></div>
-        <div class="app-tile"><b>Shopping List</b><span>Manual items, recipe ingredients, saved deals, weekly ads, totals, savings, and checkout CTA.</span></div>
-        <div class="app-tile"><b>Shopper Share</b><span>Shared lists, recipes, coupons, family groups, QR/link placeholders, and verified-use rewards.</span></div>
-        <div class="app-tile"><b>SNAP + Map + Account</b><span>SNAP-friendly deals, retailer map, privacy/support links, permissions, and account deletion.</span></div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">A 10-second product story</div>
-          <h2>Scan, save, earn, plan, share.</h2>
-        </div>
-        <p>The product is organized around the actions a shopper naturally takes before, during, and after a grocery trip.</p>
-      </div>
-      <div class="journey">
-        <div class="journey-panel">
-          <h3>How shoppers use Bag Guy</h3>
-          <div class="journey-list">
-            <div class="journey-item"><div class="num">1</div><div><b>Open Home</b><span>See savings, Bag Points, Store Credit, and nearby deals.</span></div></div>
-            <div class="journey-item"><div class="num">2</div><div><b>Scan</b><span>Use the scan code, product scanner, or receipt scan.</span></div></div>
-            <div class="journey-item"><div class="num">3</div><div><b>Save offers</b><span>Clip deals, check eligibility, and match weekly ads.</span></div></div>
-            <div class="journey-item"><div class="num">4</div><div><b>Plan meals</b><span>Build recipes around budget, family size, and local savings.</span></div></div>
-            <div class="journey-item"><div class="num">5</div><div><b>Earn rewards</b><span>Track Bag Points, Store Credit, and recent reward history.</span></div></div>
-          </div>
-        </div>
-        <div class="dashboard">
-          <div class="section-kicker">Live data experience</div>
-          <h2>Feels active, not static.</h2>
-          <p style="color:#aac1b7;margin-top:10px">Bag Guy surfaces time-based savings, expiring offers, local context, and reward progress so shoppers know what to do next.</p>
-          <div class="dash-grid">
-            <div class="dash-card"><b>Today</b><span>New deal near you: save $3 on eggs</span></div>
-            <div class="dash-card"><b>2 hours</b><span>Expiring household offer</span></div>
-            <div class="dash-card"><b>3 stores</b><span>Nearby with active savings</span></div>
-            <div class="dash-card"><b>14 pts</b><span>Until next Store Credit reward</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="dark-band">
-      <div class="dark-inner">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">Systems behind the app</div>
-            <h2>Ready for real data, not just demo cards.</h2>
-          </div>
-          <p>The current Bag Guy build includes backend-ready systems for product lookup, coupon matching, receipt rewards, provider onboarding, recipe recommendations, and safe internal operations tooling.</p>
-        </div>
-        <div class="grid">
-          <article class="card"><div class="icon">API</div><h3>Coupon connector architecture</h3><p>Built for Ibotta/IPN, Inmar, Eagle Eye, Kroger Products API, UPC lookup providers, retailer feeds, and admin-uploaded deals.</p></article>
-          <article class="card"><div class="icon">OCR</div><h3>Receipt-safe reward flow</h3><p>The mobile app uses a stable receipt contract with receipt IDs, idempotent rewards, and clear backend-down messaging.</p></article>
-          <article class="card"><div class="icon">AI</div><h3>Recipe + product intelligence</h3><p>Recipe recommendations, product metadata, UPC matching, coupon confidence, and fallback data are structured for real provider integrations.</p></article>
-        </div>
-      </div>
-    </div>
-
-    <section>
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Respectful savings</div>
-          <h2>SNAP-friendly without making shoppers feel labeled.</h2>
-        </div>
-        <p>Bag Guy helps identify eligible grocery savings and family essentials while keeping checkout eligibility language honest.</p>
-      </div>
-      <div class="grid">
-        <article class="card snap-card"><div class="icon">EBT</div><h3>SNAP-friendly deals</h3><p>Find family essentials, healthy rewards, EBT-eligible tags where known, and budget helper tools.</p></article>
-        <article class="card snap-card"><div class="icon">$</div><h3>Feed your family under budget</h3><p>Meal plans can be shaped by family size, local ads, available coupons, and realistic grocery costs.</p></article>
-        <article class="card snap-card"><div class="icon">✓</div><h3>Checkout-safe language</h3><p>Final eligibility is determined at checkout by the retailer and payment processor.</p></article>
-      </div>
-    </section>
-
-    <section>
-      <div class="compare">
-        <div class="compare-card">
-          <h3>Regular shopper experience</h3>
-          <ul>
-            <li>Bag Points, Rewards, Savings, Store Credit</li>
-            <li>Scan Code, Universal Coupon, Meal Planner</li>
-            <li>No crypto language required to use the app</li>
-          </ul>
-        </div>
-        <div class="compare-card good">
-          <h3>Optional web-only crypto layer</h3>
-          <ul>
-            <li>Solana BAG architecture and NFT membership docs</li>
-            <li>Wallet-gated transparency and utility pages</li>
-            <li>Separate from iOS shopper functionality</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div class="cta">
-      <div class="cta-inner">
-        <div>
-          <h2>Start saving instantly.</h2>
-          <p>Bag Guy helps shoppers bring local deals, rewards, meal planning, and shared savings into one simple app.</p>
-        </div>
-        <a class="btn btn-secondary" href="/how-to/">Read the how-to guide</a>
-      </div>
-    </div>
-
-    <footer>
-      <strong>Bag Guy</strong><br/>
-      <span>One scan. Every deal. Automatic rewards.</span><br/>
-      <a href="/privacy/">Privacy</a>
-      <a href="/support/">Support</a>
-      <a href="/how-to/">How to use</a>
-      <a href="/crypto/">Crypto layer</a>
-      <a href="/crypto/whitepaper/">White paper</a>
-    </footer>
   </div>
+</header>
+<main id="main">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Grocery savings app · Free on iPhone</p>
+      <h1><span class="grad">Make every grocery dollar go further.</span></h1>
+      <p class="lead">Bag Guy helps SNAP and EBT shoppers, and anyone watching the grocery budget, find SNAP-friendly deals, scan receipts for matching offers, and earn Bag Points. Honest numbers, no hype.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Download on the App Store</a>
+        <a class="btn btn-secondary" href="/guide/">Read the SNAP savings guide</a>
+      </div>
+      <ul class="trust-row">
+        <li>Free to download</li>
+        <li>We never sell your data</li>
+        <li>Clear labels, no gimmicks</li>
+      </ul>
+    </div>
+    <!-- check:example-start -->
+    <div class="phone-stage" aria-label="Example of the Bag Guy deals screen. All figures are example data." role="img">
+      <div class="orbit-ring" aria-hidden="true"></div>
+      <div class="phone" aria-hidden="true">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span class="example-tag">Example</span><span>5G</span></div>
+          <div class="scr-title">SNAP-friendly deals</div>
+          <div class="tile">
+            <div class="meta">Weekly budget · you set it</div>
+            <div class="tile-row" style="margin-top:4px"><h4>$60.00 this week</h4><span class="badge badge-snap" style="margin-left:auto">SNAP</span></div>
+            <div class="meter"><span style="width:38%"></span></div>
+            <div class="meta">3 priced deals fit · example</div>
+          </div>
+          <div class="tile"><div class="tile-row">
+            <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#FFC65C" stroke-width="1.8" stroke-linecap="round"><path d="M4 11h16l-1.5 8.5a2 2 0 0 1-2 1.5h-9a2 2 0 0 1-2-1.5z"/><path d="M8 11c0-3 1.8-6 4-6s4 3 4 6"/></svg></div>
+            <div><h4>Rolled oats, 42 oz</h4><div class="meta">Weekly ad · ends Sun</div><span class="badge badge-snap">SNAP-friendly</span></div>
+            <div class="price">$3.49</div></div></div>
+          <div class="tile"><div class="tile-row">
+            <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#3BF5A0" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 4l3 2 3-2"/></svg></div>
+            <div><h4>Frozen mixed vegetables</h4><div class="meta">Digital coupon · ends Sat</div><span class="badge badge-snap">SNAP-friendly</span></div>
+            <div class="price">$2.29</div></div></div>
+          <div class="tile"><div class="tile-row">
+            <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#5CC8FF" stroke-width="1.8"><ellipse cx="12" cy="13" rx="6" ry="8"/></svg></div>
+            <div><h4>Large eggs, 12 ct</h4><div class="meta">Weekly ad · ends Tue</div><span class="badge badge-info">Check at register</span></div>
+            <div class="price">$2.99</div></div></div>
+          <div class="scan-fab"><svg viewBox="0 0 24 24" fill="none" stroke="#03150C" stroke-width="2.2" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/></svg></div>
+        </div>
+      </div>
+    </div>
+  <!-- check:example-end -->
+  </div>
+</section>
+
+<section class="band" id="features" aria-labelledby="features-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What Bag Guy does</p>
+      <h2 id="features-h">Less coupon hunting. More groceries covered.</h2>
+      <p class="lead">Every feature below is labeled honestly: <strong>In the app</strong> means you can use it today. <strong>Next update</strong> means it is built and being tested for the next App Store release.</p>
+    </div>
+    <div class="grid g3">
+      <article class="card">
+        <span class="status-pill live">In the app</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#3BF5A0" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></div>
+        <h3>Scan your receipt</h3>
+        <p>Snap a photo of your grocery receipt. Bag Guy reads it, looks for matching offers, and adds Bag Points once the scan is checked.</p>
+      </article>
+      <article class="card">
+        <span class="status-pill live">In the app</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FFC65C" stroke-width="1.8" stroke-linecap="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg></div>
+        <h3>Find SNAP-friendly deals</h3>
+        <p>Browse grocery and household offers, filter for SNAP-friendly items, and save the ones you want. Offers vary by area; always check eligibility at the register.</p>
+      </article>
+      <article class="card">
+        <span class="status-pill live">In the app</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5CC8FF" stroke-width="1.8" stroke-linecap="round"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M8 8v8M11 8v8M14 8v8M17 8v8"/></svg></div>
+        <h3>Scan grocery barcodes</h3>
+        <p>Point your camera at a product barcode to check for matching deals. Our catalog is growing, so not every item will have a deal yet.</p>
+      </article>
+      <article class="card">
+        <span class="status-pill live">In the app</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#3BF5A0" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></div>
+        <h3>Earn Bag Points</h3>
+        <p>Earn Bag Points for scanning receipts and saving offers. Points are counted and confirmed on our servers, so the balance you see is real. Bag Points have no cash value.</p>
+      </article>
+      <article class="card">
+        <span class="status-pill soon">Next update</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FFC65C" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M3 10h18"/></svg></div>
+        <h3>Weekly budget helper</h3>
+        <p>Enter your own weekly grocery budget and see priced SNAP-friendly deals that fit it. You choose the number; Bag Guy never connects to your EBT account.</p>
+      </article>
+      <article class="card">
+        <span class="status-pill soon">Next update</span>
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5CC8FF" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <h3>Stores that accept SNAP EBT</h3>
+        <p>Find nearby stores that accept SNAP EBT, using the USDA's public retailer data. Store lists change, so call ahead to confirm.</p>
+      </article>
+    </div>
+    <p class="muted small" style="margin-top:22px">Also in the next update: shopping lists that sync when you're signed in, account deletion right in the app, and a fresh new design.</p>
+  </div>
+</section>
+
+<section aria-labelledby="how-h">
+  <div class="wrap grid g2" style="align-items:start;gap:56px">
+    <div>
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-h">Three steps. No scissors.</h2>
+      <p class="lead">Bag Guy is built to be quick in the store and simple at home, even on an older phone.</p>
+      <a class="more" href="/how-to/">See the full walkthrough →</a>
+    </div>
+    <ol class="steps">
+      <li><h3>Find the deals that fit</h3><p class="muted">Open Deals, turn on the SNAP-friendly filter, and save what you need this week.</p></li>
+      <li><h3>Shop the way you already do</h3><p class="muted">Use your EBT card or other payment at the register like always. Bag Guy never handles your benefits or payments.</p></li>
+      <li><h3>Scan your receipt</h3><p class="muted">Take a photo of your receipt to check for matching offers and earn Bag Points.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section aria-labelledby="snap-h">
+  <div class="wrap">
+    <div class="snap-band grid g2" style="gap:40px;align-items:center">
+      <div>
+        <p class="eyebrow snap">Built for SNAP &amp; EBT shoppers</p>
+        <h2 id="snap-h">Made with SNAP families in mind. With respect.</h2>
+        <p class="lead">"SNAP-friendly" in Bag Guy means an item is usually SNAP-eligible under federal rules. Some states now limit items like soda and candy, so when we're not sure, the app says so instead of guessing.</p>
+      </div>
+      <div class="grid" style="gap:14px">
+        <div class="notice"><strong>We don't touch your benefits.</strong> Bag Guy never asks for your EBT card number, PIN, or state portal login.</div>
+        <div class="notice"><strong>Your SNAP status stays private.</strong> We never sell it or share it with advertisers.</div>
+        <div class="notice"><strong>Not a government app.</strong> Bag Guy is independent and not affiliated with the USDA or any state agency.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="guide-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">SNAP savings guide</p>
+      <h2 id="guide-h">Practical, sourced, free to read.</h2>
+      <p class="lead">Plain-language guides built on USDA information, so you can shop with confidence.</p>
+    </div>
+    <div class="grid g4">
+      <a class="card" href="/guide/what-snap-covers/"><h3>What SNAP covers, and the new state rules</h3><p>Eligible foods, what's not covered, and which states restrict soda and candy, with start dates.</p><span class="more">Read guide →</span></a>
+      <a class="card" href="/guide/stretch-your-snap-dollars/"><h3>Stretch your food dollars all month</h3><p>A week-by-week plan, unit prices, and the cheapest healthy staples.</p><span class="more">Read guide →</span></a>
+      <a class="card" href="/guide/find-stores-that-accept-snap/"><h3>Find stores that accept SNAP</h3><p>Using the USDA retailer locator, shopping online with SNAP, and what fees SNAP can't pay.</p><span class="more">Read guide →</span></a>
+      <a class="card" href="/guide/protect-your-ebt-card/"><h3>Protect your EBT card from theft</h3><p>How skimming works, PIN habits, card locks, and what to do if benefits go missing.</p><span class="more">Read guide →</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="memberships" aria-labelledby="mem-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Pricing</p>
+      <h2 id="mem-h">Free to download. Optional memberships are coming.</h2>
+      <p class="lead">The core Bag Guy app is free. Optional monthly memberships are planned. They aren't available to buy yet, and their benefits will be listed here before they launch.</p>
+    </div>
+    <!-- check:pricing-start -->
+    <div class="grid g4">
+      <div class="card price-card"><h3>Free</h3><div class="amount">$0</div><p>Deals, the SNAP-friendly filter, receipt scanning and Bag Points.</p></div>
+      <div class="card price-card"><span class="status-pill soon">Coming soon</span><h3>Silver</h3><div class="amount">$4.99<span> / month</span></div><p>Benefits to be announced.</p></div>
+      <div class="card price-card"><span class="status-pill soon">Coming soon</span><h3>Gold</h3><div class="amount">$9.99<span> / month</span></div><p>Benefits to be announced.</p></div>
+      <div class="card price-card"><span class="status-pill soon">Coming soon</span><h3>Platinum</h3><div class="amount">$19.99<span> / month</span></div><p>Benefits to be announced.</p></div>
+    </div>
+    <p class="muted small" style="margin-top:20px">Prices in US dollars. In the iPhone app, memberships will be sold through Apple's In-App Purchase, and you'll be able to cancel any time in your Apple account settings. SNAP benefits can't be used to pay for a membership.</p>
+    <!-- check:pricing-end -->
+  </div>
+</section>
+
+<section class="band" id="faq" aria-labelledby="faq-h">
+  <div class="wrap narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2 id="faq-h">Good questions</h2>
+    <details><summary>Is Bag Guy a government or SNAP app?</summary><p>No. Bag Guy is an independent app. It is not affiliated with, endorsed by, or sponsored by the USDA, SNAP, or any state agency. To apply for SNAP or ask about your benefits, contact your <a href="https://www.fna.usda.gov/snap/state-directory" rel="noopener">state SNAP agency</a>.</p></details>
+    <details><summary>Can I pay with my EBT card in Bag Guy?</summary><p>No. Bag Guy doesn't process payments or benefits. You pay at the store or on the store's own website the way you normally do.</p></details>
+    <details><summary>Does "SNAP-friendly" mean an item will always be covered?</summary><p>No. It means the item is usually SNAP-eligible under federal rules. Eligibility is decided at the register, and some states restrict items like soda and candy. See <a href="/guide/what-snap-covers/">What SNAP covers</a>.</p></details>
+    <details><summary>Are Bag Points worth money?</summary><p>Bag Points have no cash value and can't be exchanged for cash. If we add ways to redeem points, we'll explain them clearly in the app first.</p></details>
+    <details><summary>How much will I save?</summary><p>It depends on what you buy, where you shop, and which offers are available in your area. We won't promise a number we can't back up. Any figures shown on this website are examples.</p></details>
+    <details><summary>Does Bag Guy have Android?</summary><p>Bag Guy is on iPhone today. Android isn't available yet.</p></details>
+    <details><summary>How do I delete my account?</summary><p>See <a href="/delete-account/">Delete your account</a> for the steps and what happens to your data.</p></details>
+  </div>
+</section>
+
+<section aria-labelledby="cta-h">
+  <div class="wrap" style="text-align:center">
+    <img src="/assets/brand/icon-192.png" alt="" width="96" height="96" style="margin:0 auto 24px;border-radius:22px;box-shadow:0 20px 60px -20px rgba(59,245,160,.35)">
+    <h2 id="cta-h">Your grocery budget's new sidekick.</h2>
+    <p class="lead" style="margin:0 auto 28px">Free on iPhone. Make every grocery dollar go further.</p>
+    <a class="btn btn-primary" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Download on the App Store</a>
+  </div>
+</section>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="/"><img src="/assets/brand/icon-96.png" alt="" width="34" height="34">Bag Guy</a>
+        <p class="muted small" style="margin-top:14px;max-width:300px">Make every grocery dollar go further.</p>
+        <a class="btn btn-secondary btn-sm" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Download on the App Store</a>
+      </div>
+      <div>
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/how-to/">How it works</a></li>
+          <li><a href="/#memberships">Memberships</a></li>
+          <li><a href="/#faq">FAQ</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>SNAP savings guide</h2>
+        <ul>
+          <li><a href="/guide/what-snap-covers/">What SNAP covers</a></li>
+          <li><a href="/guide/stretch-your-snap-dollars/">Stretch your food dollars</a></li>
+          <li><a href="/guide/find-stores-that-accept-snap/">Find stores that accept SNAP</a></li>
+          <li><a href="/guide/protect-your-ebt-card/">Protect your EBT card</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Help &amp; legal</h2>
+        <ul>
+          <li><a href="/support/">Contact &amp; support</a></li>
+          <li><a href="/delete-account/">Delete your account</a></li>
+          <li><a href="/privacy/">Privacy policy</a></li>
+          <li><a href="/terms/">Terms of use</a></li>
+          <li><a href="/affiliate-disclosure/">Affiliate disclosure</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <p><strong>Bag Guy is an independent app. It is not affiliated with, endorsed by, or sponsored by the USDA, SNAP, or any state agency.</strong> Bag Guy does not process EBT payments or manage benefits. To apply for SNAP or ask about your benefits, contact your state SNAP agency.</p>
+      <p>Affiliate disclosure: some links on Bag Guy may be affiliate links. If you shop through one, Bag Guy may earn a commission at no extra cost to you. Read our <a href="/affiliate-disclosure/">affiliate disclosure</a>.</p>
+      <p>App Store is a service mark of Apple Inc. Other product and company names belong to their owners. &copy; 2026 Bag Guy.</p>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

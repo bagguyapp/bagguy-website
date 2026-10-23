@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs><radialGradient id="bg" cx="70%" cy="18%" r="95%"><stop offset="0" stop-color="#16294A"/><stop offset=".55" stop-color="#0A1222"/><stop offset="1" stop-color="#05080F"/></radialGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7DFFC4"/><stop offset=".55" stop-color="#3BF5A0"/><stop offset="1" stop-color="#14C77E"/></linearGradient>
+<linearGradient id="e" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5CC8FF" stop-opacity=".15"/><stop offset=".5" stop-color="#5CC8FF"/><stop offset="1" stop-color="#5CC8FF" stop-opacity=".15"/></linearGradient>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="1024" height="1024" fill="url(#bg)"/><g transform="translate(512 512) scale(1.0) rotate(-35)">
+ <ellipse rx="400" ry="132" fill="none" stroke="url(#e)" stroke-width="22" opacity=".9"/>
+ <g filter="url(#glow)"><path d="M-250 -150 H120 L260 0 L120 150 H-250 a40 40 0 0 1 -40 -40 V-110 a40 40 0 0 1 40 -40 z" fill="url(#g)"/></g>
+ <circle cx="135" cy="0" r="38" fill="#0A1222"/>
+ <path transform="rotate(35 -90 0)" d="M-175 -5 l55 55 l115 -115" fill="none" stroke="#03150C" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M -400 0 A400 132 0 0 0 400 0" fill="none" stroke="#5CC8FF" stroke-width="22" stroke-linecap="round"/>
+ <circle cx="283" cy="93" r="26" fill="#F3F6FB"/>
+</g></svg>
