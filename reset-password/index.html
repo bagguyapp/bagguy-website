@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name='impact-site-verification' value='bdfe8b7f-bbcd-48bb-8380-382dc9bc9584'>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reset your password · Bag Guy</title>
+<meta name="description" content="Choose a new password for your Bag Guy account.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.bagguyapp.com/reset-password/">
+<meta name="theme-color" content="#070B14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bag Guy">
+<meta property="og:title" content="Reset your password · Bag Guy">
+<meta property="og:description" content="Choose a new password for your Bag Guy account.">
+<meta property="og:url" content="https://www.bagguyapp.com/reset-password/">
+<meta property="og:image" content="https://www.bagguyapp.com/assets/brand/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="apple-itunes-app" content="app-id=6763378440">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/brand/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap head-row">
+    <a class="brand" href="/" aria-label="Bag Guy home"><img src="/assets/brand/icon-96.png" alt="" width="34" height="34">Bag Guy</a>
+    <nav class="nav" aria-label="Main">
+      <a href="/how-to/" >How it works</a>
+      <a href="/guide/" >SNAP savings guide</a>
+      <a href="/about/" >About</a>
+      <a href="/support/" >Support</a>
+      <a class="menu-link" href="/guide/">Guide</a>
+      <a class="btn btn-primary btn-sm" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Get the app</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<article class="article">
+  <div class="wrap narrow">
+    <p class="eyebrow">Account</p>
+    <h1>Reset your password</h1>
+    <form id="reset-form" hidden>
+      <p><label for="pw1">New password (at least 6 characters)</label><br>
+      <input id="pw1" type="password" autocomplete="new-password" minlength="6" maxlength="128" required style="width:100%;padding:.6em;font-size:1em"></p>
+      <p><label for="pw2">Type it again</label><br>
+      <input id="pw2" type="password" autocomplete="new-password" minlength="6" maxlength="128" required style="width:100%;padding:.6em;font-size:1em"></p>
+      <p><button class="btn btn-primary" type="submit">Save new password</button></p>
+    </form>
+    <p id="reset-msg" role="status" aria-live="polite">This page needs the link from your password reset email. If you need help getting back into your account, email <a href="mailto:support@bagguyapp.com">support@bagguyapp.com</a> from the address you signed up with.</p>
+  </div>
+</article>
+<script>
+(function () {
+  var token = new URLSearchParams(location.search).get("token") || "";
+  var form = document.getElementById("reset-form"), msg = document.getElementById("reset-msg");
+  if (!token) return;
+  history.replaceState(null, "", location.pathname);
+  form.hidden = false; msg.textContent = "";
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var a = document.getElementById("pw1").value, b = document.getElementById("pw2").value;
+    if (a.length < 6) { msg.textContent = "Use at least 6 characters."; return; }
+    if (a !== b) { msg.textContent = "The two passwords don't match."; return; }
+    msg.textContent = "Saving...";
+    fetch("https://api.bagguyapp.com/auth/reset-password", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: token, new_password: a })
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (res.ok) { form.hidden = true; msg.textContent = "Your password was changed. Open Bag Guy and sign in with your new password."; }
+        else { msg.textContent = (res.j && res.j.error) || "That link has expired or was already used. Email support@bagguyapp.com for help."; }
+      })
+      .catch(function () { msg.textContent = "Couldn't reach Bag Guy. Check your connection and try again."; });
+  });
+})();
+</script>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="/"><img src="/assets/brand/icon-96.png" alt="" width="34" height="34">Bag Guy</a>
+        <p class="muted small" style="margin-top:14px;max-width:300px">Make every grocery dollar go further.</p>
+        <a class="btn btn-secondary btn-sm" href="https://apps.apple.com/us/app/bag-guy/id6763378440" rel="noopener">Download on the App Store</a>
+      </div>
+      <div>
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/how-to/">How it works</a></li>
+          <li><a href="/#memberships">Memberships</a></li>
+          <li><a href="/#faq">FAQ</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>SNAP savings guide</h2>
+        <ul>
+          <li><a href="/guide/what-snap-covers/">What SNAP covers</a></li>
+          <li><a href="/guide/stretch-your-snap-dollars/">Stretch your food dollars</a></li>
+          <li><a href="/guide/find-stores-that-accept-snap/">Find stores that accept SNAP</a></li>
+          <li><a href="/guide/protect-your-ebt-card/">Protect your EBT card</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Help &amp; legal</h2>
+        <ul>
+          <li><a href="/support/">Contact &amp; support</a></li>
+          <li><a href="/delete-account/">Delete your account</a></li>
+          <li><a href="/privacy/">Privacy policy</a></li>
+          <li><a href="/terms/">Terms of use</a></li>
+          <li><a href="/affiliate-disclosure/">Affiliate disclosure</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <p><strong>Bag Guy is an independent app. It is not affiliated with, endorsed by, or sponsored by the USDA, SNAP, or any state agency.</strong> Bag Guy does not process EBT payments or manage benefits. To apply for SNAP or ask about your benefits, contact your state SNAP agency.</p>
+      <p>Affiliate disclosure: some links on Bag Guy may be affiliate links. If you shop through one, Bag Guy may earn a commission at no extra cost to you. Read our <a href="/affiliate-disclosure/">affiliate disclosure</a>.</p>
+      <p>App Store is a service mark of Apple Inc. Other product and company names belong to their owners. &copy; 2026 Bag Guy.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

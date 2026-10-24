@@ -1,0 +1,30 @@
+<!--meta
+title: Join a shared list
+description: Someone shared a Bag Guy shopping list with you. Open Bag Guy and enter the list code to join.
+out: join/index.html
+path: /join/
+robots: noindex,follow
+-->
+<article class="article">
+  <div class="wrap narrow">
+    <p class="eyebrow">Shared shopping list</p>
+    <h1>Join a shared Bag Guy list</h1>
+    <p class="lead" id="join-lead">Someone shared a shopping list with you. Open Bag Guy, go to your shopping lists, tap <strong>Join a List</strong>, and enter the 6-character code they sent you.</p>
+    <p id="join-code-wrap" hidden>Your list code: <strong id="join-code" style="font-size:1.6em;letter-spacing:.12em"></strong></p>
+    <p><a class="btn btn-primary" href="{{app_store_url}}" rel="noopener">Get Bag Guy on the App Store</a></p>
+    <p>Already have the app? Open it and sign in first; lists are shared between Bag Guy accounts.</p>
+    <p>Trouble joining? Email <a href="mailto:support@bagguyapp.com">support@bagguyapp.com</a> with the code.</p>
+  </div>
+</article>
+<script>
+(function () {
+  var m = location.pathname.match(/^\/join\/([A-Za-z0-9]{4,12})\/?$/);
+  var q = new URLSearchParams(location.search);
+  var code = (m && m[1]) || q.get("code") || "";
+  code = code.replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 12);
+  if (code) {
+    document.getElementById("join-code").textContent = code;
+    document.getElementById("join-code-wrap").hidden = false;
+  }
+})();
+</script>
