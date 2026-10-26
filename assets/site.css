@@ -165,3 +165,6 @@ td{color:var(--text-2)}
 .foot-grid a:hover{color:var(--text);text-decoration:underline}
 .disclaimer{margin-top:40px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:14px;line-height:1.6}
 .disclaimer p{margin-bottom:.7em}
+.later{background:rgba(92,200,255,.14);color:var(--electric)}
+.phone-stage{flex-direction:column;align-items:center}
+.phone-caption{position:relative;margin:14px 0 0;font-size:13px;color:var(--text-2);text-align:center}
