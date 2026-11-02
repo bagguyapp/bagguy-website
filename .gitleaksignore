@@ -1,0 +1,4 @@
+# Reviewed gitleaks findings (P0-5b, 2026-11-01). One fingerprint per line: commit:path:rule:line.
+# False positive: BGT_TOKEN in index.html is the public on-chain token contract address, not a credential.
+# Add new entries only after review; never add a real secret here (rotate it instead).
+a6203a590f4566e6ca59623eccd6b0bbf3802994:index.html:generic-api-key:268
